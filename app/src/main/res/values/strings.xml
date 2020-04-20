@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">Perpustakaan Digital IF Unikom</string>
+    <string name="navigation_home">Beranda</string>
+    <string name="navigation_search">Pencarian</string>
+    <string name="navigation_account">Akun</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="titleapp">Perpustakaan Digital IF Unikom</string>
+    <string name="judul_skripsi">Judul Skripsi</string>
+    <string name="nim">NIM</string>
+    <string name="timeout">Connection Timeout</string>
+    <string name="no_internet">Not Connect to The Internet</string>
+    <string name="poster_backdrop">backdrop</string>
+    <string name="poster">poster</string>
+    <string name="penulis">penulis</string>
+    <string name="download">Download</string>
+
+
+    <string name="register">REGISTER</string>
+    <string name="login_email_hint">Email</string>
+    <string name="login_password_hint">Password</string>
+    <string name="signup_login_hint">Already have an account? Sign In</string>
+    <string name="login_signup_hint">Don\'t have an account? Sign Up</string>
+</resources>
