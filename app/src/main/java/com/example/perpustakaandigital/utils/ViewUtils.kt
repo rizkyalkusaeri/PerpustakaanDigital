@@ -1,4 +1,4 @@
-package com.example.perpustakaandigital.view
+package com.example.perpustakaandigital.utils
 
 import android.view.View
 import com.google.android.material.snackbar.Snackbar

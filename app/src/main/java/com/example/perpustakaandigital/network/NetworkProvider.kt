@@ -1,8 +1,7 @@
 package com.example.perpustakaandigital.network
 
 import android.content.Context
-import com.example.perpustakaandigital.BuildConfig
-import com.example.perpustakaandigital.activity.ConstantUtils.Companion.BASE_URL
+import com.example.perpustakaandigital.utils.ConstantUtils.Companion.BASE_URL
 import com.readystatesoftware.chuck.ChuckInterceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor

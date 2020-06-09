@@ -5,15 +5,12 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.perpustakaandigital.R
-import com.example.perpustakaandigital.activity.ConstantUtils
-import com.example.perpustakaandigital.activity.ConstantUtils.Companion.MAHASISWA_EXTRA
+import com.example.perpustakaandigital.utils.ConstantUtils.Companion.MAHASISWA_EXTRA
 import com.example.perpustakaandigital.activity.DetailHomeActivity
 import com.example.perpustakaandigital.model.Data
 import kotlinx.android.synthetic.main.item_home.view.*
-import okhttp3.internal.notify
 
 class HomeAdapter(private val context: Context) : RecyclerView.Adapter<HomeAdapter.HomeViewHolder>() {
 
@@ -38,7 +35,7 @@ class HomeAdapter(private val context: Context) : RecyclerView.Adapter<HomeAdapt
 
     override fun getItemCount(): Int {
 
-        return data.size;
+        return data.size
 
     }
 

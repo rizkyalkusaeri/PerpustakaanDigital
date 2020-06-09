@@ -6,16 +6,18 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.perpustakaandigital.R
-import com.example.perpustakaandigital.activity.ConstantUtils.Companion.API_KEY
+import com.example.perpustakaandigital.utils.ConstantUtils.Companion.API_KEY
 import com.example.perpustakaandigital.model.LoginResponse
+import com.example.perpustakaandigital.model.Users
 import com.example.perpustakaandigital.network.ConnectivityStatus
 import com.example.perpustakaandigital.network.HomeDataSource
 import com.example.perpustakaandigital.network.NetworkError
 import com.example.perpustakaandigital.network.NetworkProvider
 import com.example.perpustakaandigital.presenter.LoginPresenter
 import com.example.perpustakaandigital.repository.MahasiswaImplementation
+import com.example.perpustakaandigital.storage.SharedPrefManager
 import com.example.perpustakaandigital.view.LoginView
-import com.example.perpustakaandigital.view.snackbar
+import com.example.perpustakaandigital.utils.snackbar
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.layout_login.*
 import retrofit2.HttpException
@@ -25,6 +27,10 @@ class LoginActivity : AppCompatActivity(), LoginView.View {
 
     private lateinit var presenter: LoginView.Presenter
     private var dataSource: HomeDataSource? = null
+
+    private val listUser = ArrayList<Users>()
+
+    private var position : Int? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,13 +43,15 @@ class LoginActivity : AppCompatActivity(), LoginView.View {
         presenter = LoginPresenter(this,repository)
 
         loginButton.setOnClickListener {
-            val email = editTextEmail.text.toString().trim()
-            val password = editTextPassword.text.toString().trim()
-            presenter.onLoginButtonClick(API_KEY,email,password)
-
+            loadDataLogin()
         }
     }
 
+    private fun loadDataLogin(){
+        val email = editTextEmail.text.toString().trim()
+        val password = editTextPassword.text.toString().trim()
+        presenter.onLoginButtonClick(API_KEY,email,password)
+    }
 
     override fun noInternetConnection(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
@@ -72,9 +80,11 @@ class LoginActivity : AppCompatActivity(), LoginView.View {
         pb_login.visibility = View.GONE
     }
 
-    override fun onSuccess(data:LoginResponse) {
+    override fun onSuccess(login: LoginResponse) {
 
-        val intent = Intent(this,LoginActivity::class.java)
+        SharedPrefManager.getInstance(applicationContext).saveUser(login.users)
+
+        val intent = Intent(this, MainActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
     }
@@ -84,9 +94,20 @@ class LoginActivity : AppCompatActivity(), LoginView.View {
         root_layout.snackbar(message)
     }
 
+    override fun onStart() {
+        super.onStart()
+
+        if (SharedPrefManager.getInstance(this).isLoggedIn){
+            val intent = Intent(this, MainActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(intent)
+        }
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         presenter.onDestroy()
     }
 
 }
+

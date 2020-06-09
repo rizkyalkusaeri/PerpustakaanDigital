@@ -4,6 +4,7 @@ import com.example.perpustakaandigital.BuildConfig
 import com.example.perpustakaandigital.model.DetailHomeResponse
 import com.example.perpustakaandigital.model.HomeResponse
 import com.example.perpustakaandigital.model.LoginResponse
+import com.example.perpustakaandigital.model.UsersResponse
 import io.reactivex.Flowable
 import retrofit2.Call
 import retrofit2.http.*
@@ -20,7 +21,7 @@ interface HomeDataSource {
     @FormUrlEncoded
     @POST("/api/login")
     fun userLogin(
-        @Query("X-API-KEY")
+        @Field("X-API-KEY")
         apiKey : String,
         @Field("email") email : String,
         @Field("password") password : String

@@ -1,14 +1,18 @@
 package com.example.perpustakaandigital.model
 
+import android.os.Parcelable
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 data class UsersResponse(
     @SerializedName("data")
     @Expose
     val data: ArrayList<Users>
-)
+):Parcelable
 
+@Parcelize
 data class Users(
     @SerializedName("id_anggota")
     @Expose
@@ -45,4 +49,4 @@ data class Users(
     @SerializedName("akses")
     @Expose
     val akses: String? = null
-)
+):Parcelable

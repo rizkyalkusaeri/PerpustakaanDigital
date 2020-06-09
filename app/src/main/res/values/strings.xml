@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Perpustakaan Digital IF Unikom</string>
+    <string name="app_name">SMART LIBRARY IF UNIKOM</string>
     <string name="navigation_home">Beranda</string>
     <string name="navigation_search">Pencarian</string>
     <string name="navigation_account">Akun</string>
@@ -22,4 +22,20 @@
     <string name="login_password_hint">Password</string>
     <string name="signup_login_hint">Already have an account? Sign In</string>
     <string name="login_signup_hint">Don\'t have an account? Sign Up</string>
+    <string name="navigation_device">Device</string>
+    <string name="navigation_skripsi">Skripsi</string>
+
+    <string name="qm_star">Star</string>
+    <string name="qm_custom_link">Link</string>
+    <string name="qm_custom_unlink">Unlink</string>
+    <string name="email">email</string>
+    <string name="hakakses">Hak Akses</string>
+    <string name="edit">Edit</string>
+    <string name="ubahpass">Ubah Password</string>
+    <string name="logout">Logout</string>
+    <string name="kelompok">Kelompok Keilmuan</string>
+    <string name="open">Open</string>
+    <string name="Pinjam">Pinjam</string>
+    <string name="kosong">Belum Ada Data</string>
+    <string name="add_to_borrow">Pinjam</string>
 </resources>

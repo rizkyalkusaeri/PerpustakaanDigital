@@ -1,23 +1,31 @@
 package com.example.perpustakaandigital.activity
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.perpustakaandigital.R
 import com.example.perpustakaandigital.fragment.AccountFragment
+import com.example.perpustakaandigital.fragment.DeviceFragment
 import com.example.perpustakaandigital.fragment.HomeFragment
-import com.example.perpustakaandigital.fragment.SearchFragment
+import com.example.perpustakaandigital.storage.SharedPrefManager
+import com.example.perpustakaandigital.utils.ConstantUtils
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import kotlinx.android.synthetic.main.activity_main.*
+
 
 class MainActivity : AppCompatActivity() {
+
     var fragment: Fragment? = HomeFragment()
+
     private val onNavigationItemSelectedListener =
         BottomNavigationView.OnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.navigation_home -> fragment = HomeFragment()
-                R.id.navigation_search -> fragment = SearchFragment()
+                R.id.navigation_device -> fragment = DeviceFragment()
                 R.id.navigation_account -> fragment = AccountFragment()
             }
+
             supportFragmentManager.beginTransaction()
                 .replace(R.id.container_layout, fragment!!)
                 .commit()
@@ -27,8 +35,10 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val navigationView =
-            findViewById<BottomNavigationView>(R.id.bottomNavigationView)
+        setSupportActionBar(toolbar)
+
+        val navigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
+
         navigationView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
@@ -48,5 +58,15 @@ class MainActivity : AppCompatActivity() {
     override fun onSaveInstanceState(outState: Bundle) {
         supportFragmentManager.putFragment(outState, ConstantUtils.KEY_FRAGMENT, fragment!!)
         super.onSaveInstanceState(outState)
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        if (!SharedPrefManager.getInstance(this).isLoggedIn) {
+            val intent = Intent(this, LoginActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(intent)
+        }
     }
 }

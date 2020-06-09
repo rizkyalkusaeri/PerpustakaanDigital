@@ -1,9 +1,6 @@
 package com.example.perpustakaandigital.repository
 
-import com.example.perpustakaandigital.model.Data
-import com.example.perpustakaandigital.model.DetailHomeResponse
-import com.example.perpustakaandigital.model.HomeResponse
-import com.example.perpustakaandigital.model.LoginResponse
+import com.example.perpustakaandigital.model.*
 import com.example.perpustakaandigital.network.HomeDataSource
 import io.reactivex.Flowable
 

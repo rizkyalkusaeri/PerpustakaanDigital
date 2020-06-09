@@ -32,7 +32,7 @@ data class Data(
         @Expose
         val nim_penulis : String? = null,
 
-        @SerializedName("penulis")
+        @SerializedName("nama_penulis")
         @Expose
         val penulis : String? = null,
 

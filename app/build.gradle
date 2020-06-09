@@ -20,6 +20,9 @@ android {
         buildConfigField 'String', 'API_KEY', '"skripsiunikom"'
         buildConfigField 'String', 'BASE_URL', '"https://digitallibraryunikom.000webhostapp.com"'
         buildConfigField 'String', 'PDF_URL', '"https://digitallibraryunikom.000webhostapp.com/Berkas/"'
+
+        consumerProguardFiles 'consumer-rules.pro'
+
     }
 
     buildTypes {
@@ -28,9 +31,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-    dataBinding {
-        enabled = true
-    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -84,14 +85,18 @@ dependencies {
     implementation "io.reactivex.rxjava2:rxandroid:2.1.1"
     implementation 'com.squareup.okhttp3:logging-interceptor:4.4.0'
 
+    //database
+    implementation 'androidx.room:room-runtime:2.2.5'
+    kapt 'androidx.room:room-compiler:2.2.5'
+
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     implementation 'androidx.core:core-ktx:1.2.0'
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.0-alpha01"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-
-
+    implementation 'com.github.barteksc:android-pdf-viewer:2.8.2'
+    implementation 'com.mindorks.android:prdownloader:0.6.0'
 }
 
 androidExtensions {

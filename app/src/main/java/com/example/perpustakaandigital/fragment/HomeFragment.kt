@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.example.perpustakaandigital.fragment
 
 import android.os.Bundle
@@ -12,8 +14,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.perpustakaandigital.R
-import com.example.perpustakaandigital.activity.ConstantUtils.Companion.API_KEY
-import com.example.perpustakaandigital.activity.ConstantUtils.Companion.STATE_SAVED
+import com.example.perpustakaandigital.utils.ConstantUtils.Companion.API_KEY
+import com.example.perpustakaandigital.utils.ConstantUtils.Companion.STATE_SAVED
 import com.example.perpustakaandigital.adapter.HomeAdapter
 import com.example.perpustakaandigital.model.Data
 import com.example.perpustakaandigital.model.HomeResponse
@@ -29,9 +31,6 @@ import java.net.SocketTimeoutException
 import kotlin.properties.Delegates
 
 
-/**
- * A simple [Fragment] subclass.
- */
 class HomeFragment : Fragment(), HomeView.View {
 
     private lateinit var mLayoutManager: RecyclerView.LayoutManager

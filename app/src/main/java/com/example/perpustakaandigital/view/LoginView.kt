@@ -1,6 +1,7 @@
 package com.example.perpustakaandigital.view
 
 import com.example.perpustakaandigital.model.LoginResponse
+import com.example.perpustakaandigital.model.UsersResponse
 import com.example.perpustakaandigital.repository.MahasiswaImplementation
 
 class LoginView {
@@ -8,7 +9,7 @@ class LoginView {
     interface View{
         fun showProgressBar()
         fun hideProgressBar()
-        fun onSuccess(data: LoginResponse)
+        fun onSuccess(login: LoginResponse)
         fun onFailure(message: String)
         fun noInternetConnection(message: String)
         fun handleError(t:Throwable?)

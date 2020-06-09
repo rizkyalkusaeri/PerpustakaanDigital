@@ -53,120 +53,143 @@
             android:layout_height="match_parent"
             android:fillViewport="true">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <LinearLayout
                 android:id="@+id/layout_data"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_marginTop="16dp"
+                android:layout_width="360dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_gravity="center">
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:paddingLeft="25dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:layout_marginRight="@dimen/margin_normal_size"
+                        android:src="@drawable/ic_library_books_black_24dp"/>
+                    <TextView
+                        android:id="@+id/tvDetailJudul"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/margin_normal_size"
+                        android:layout_marginEnd="@dimen/margin_normal_size"
+                        android:layout_marginTop="@dimen/margin_normal_size"
+                        android:text="@string/judul_skripsi"
+                        android:textColor="#000000"
+                        android:textSize="16sp"
+                        android:textStyle="bold"/>
+                </LinearLayout>
 
-                <View
-                    android:id="@+id/center"
-                    android:layout_width="1dp"
-                    android:layout_height="0dp"
-                    android:visibility="invisible"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintHorizontal_bias="0.45"/>
+                <LinearLayout
+                    android:layout_marginTop="25dp"
+                    android:orientation="horizontal"
+                    android:paddingLeft="25dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:layout_marginRight="@dimen/margin_normal_size"
+                        android:src="@drawable/ic_school_black_24dp"/>
+                    <TextView
+                        android:id="@+id/tvDetailNim"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/margin_normal_size"
+                        android:layout_marginTop="@dimen/margin_normal_size"
+                        android:layout_marginEnd="@dimen/margin_normal_size"
+                        android:text="@string/nim"
+                        android:textColor="#000000"
+                        android:textSize="16sp"
+                        android:textStyle="bold"/>
+                </LinearLayout>
 
-                <ImageView
-                    android:id="@+id/img_poster"
-                    android:layout_width="0dp"
-                    android:layout_height="220dp"
-                    android:layout_marginStart="@dimen/margin_normal_size"
-                    android:layout_marginEnd="@dimen/margin_normal_size"
-                    android:layout_marginTop="@dimen/margin_normal_size"
-                    android:src="@drawable/icon"
-                    android:contentDescription="@string/poster"
-                    app:layout_constraintEnd_toStartOf="@+id/center"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"/>
+                <LinearLayout
+                    android:layout_marginTop="25dp"
+                    android:orientation="horizontal"
+                    android:paddingLeft="25dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:layout_marginRight="@dimen/margin_normal_size"
+                        android:src="@drawable/ic_stars_black_24dp"/>
+                    <TextView
+                        android:id="@+id/tvDetailPenulis"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/margin_normal_size"
+                        android:layout_marginEnd="@dimen/margin_normal_size"
+                        android:layout_marginTop="@dimen/margin_small_size"
+                        android:text="@string/penulis"
+                        android:textColor="#000000"
+                        android:textSize="16sp"
+                        android:textStyle="bold"/>
+                </LinearLayout>
 
-                <TextView
-                    android:id="@+id/tvDetailJudul"
-                    android:layout_width="0dp"
+                <LinearLayout
+                    android:layout_marginTop="25dp"
+                    android:orientation="horizontal"
+                    android:paddingLeft="25dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:layout_marginRight="@dimen/margin_normal_size"
+                        android:src="@drawable/ic_create_black_24dp"/>
+                    <TextView
+                        android:id="@+id/tvDetailKk"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#000000"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:layout_marginLeft="@dimen/margin_normal_size"
+                        android:layout_marginEnd="@dimen/margin_normal_size"
+                        android:layout_marginTop="@dimen/margin_small_size"
+                        android:text="@string/kelompok"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/margin_normal_size"
-                    android:layout_marginTop="@dimen/margin_normal_size"
-                    android:text="@string/judul_skripsi"
-                    android:textColor="#000000"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/center"
-                    app:layout_constraintTop_toTopOf="parent"/>
+                    android:layout_marginTop="40dp"
+                    android:gravity="center">
 
-                <TextView
-                    android:id="@+id/tvDetailNim"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_normal_size"
-                    android:layout_marginEnd="@dimen/margin_normal_size"
-                    android:text="@string/nim"
-                    android:textStyle="bold"
-                    android:textSize="15sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/center"
-                    app:layout_constraintTop_toBottomOf="@+id/tvDetailJudul"/>
+                    <Button
+                        android:visibility="gone"
+                        android:id="@+id/btn_borrow"
+                        android:textColor="#fff"
+                        android:background="@drawable/buttonstyle"
+                        android:layout_marginTop="35dp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="20dp"
+                        android:text="@string/Pinjam" />
+                    <Button
+                        android:visibility="gone"
+                        android:id="@+id/btn_open"
+                        android:textColor="#fff"
+                        android:background="@drawable/buttonstyle"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/open" />
 
-                <TextView
-                    android:id="@+id/tvDetailPenulis"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/margin_normal_size"
-                    android:layout_marginTop="@dimen/margin_small_size"
-                    android:text="@string/penulis"
-                    app:layout_constraintTop_toBottomOf="@+id/tvDetailNim"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/center"/>
-
-                <TextView
-                    android:id="@+id/tvDetailKk"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/margin_normal_size"
-                    android:layout_marginTop="@dimen/margin_small_size"
-                    android:text="@string/penulis"
-                    app:layout_constraintTop_toBottomOf="@+id/tvDetailPenulis"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/center"/>
-                <TextView
-                    android:id="@+id/tvDetailFile"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/margin_normal_size"
-                    android:layout_marginTop="@dimen/margin_small_size"
-                    android:text="@string/penulis"
-                    app:layout_constraintTop_toBottomOf="@+id/tvDetailKk"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/center"/>
-                <TextView
-                    android:id="@+id/tvDetailPass"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/margin_normal_size"
-                    android:layout_marginTop="@dimen/margin_small_size"
-                    android:text="@string/penulis"
-                    app:layout_constraintTop_toBottomOf="@+id/tvDetailFile"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/center"/>
-
-                <Button
-                    android:id="@+id/btnDownload"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/margin_normal_size"
-                    android:layout_marginTop="@dimen/margin_small_size"
-                    android:text="@string/download"
-                    app:layout_constraintTop_toBottomOf="@+id/tvDetailFile"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/center"/>
+                </LinearLayout>
 
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            </LinearLayout>
 
         </androidx.core.widget.NestedScrollView>
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
+

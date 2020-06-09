@@ -13,6 +13,7 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
@@ -61,5 +62,17 @@
         <item name="android:textColor">@color/whiteTextColor</item>
         <item name="android:textStyle">bold</item>
     </style>
+
+
+    <style name="ToolbarTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="titleTextColor">@color/app_color_icon</item>
+        <item name="colorControlNormal">@color/app_color_icon</item>
+        <item name="iconTint">@color/app_color_icon</item>
+        <!--Search-->
+        <item name="android:editTextColor">@color/app_color_icon</item>
+        <item name="android:textColorHint">@color/app_color_icon_light</item>
+    </style>
+
+
 
 </resources>

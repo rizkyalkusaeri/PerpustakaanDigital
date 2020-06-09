@@ -6,9 +6,17 @@
 
     <!--colors for modern ui-->
     <color name="whiteTextColor">#fff</color>
-    <color name="primaryTextColor">#00a5ff</color>
+    <color name="primaryTextColor">#1F5BF3</color>
     <color name="loginBkColor">#f0f0f0</color>
 
     <!--colros for card-->
     <color name="whiteCardColor">#fff</color>
+
+    <color name="app_color_icon">#828694</color>
+    <color name="app_color_icon_light">#80828694</color> <!-- 50% -->
+
+    <color name="tab_color_selected">#404452</color>
+    <color name="tab_color_unselected">#B3404452</color> <!-- 70% -->
+
+    <color name="annotation_tool_background">#D1D5E3</color>
 </resources>

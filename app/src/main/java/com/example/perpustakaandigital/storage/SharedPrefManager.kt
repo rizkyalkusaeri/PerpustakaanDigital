@@ -1,38 +1,40 @@
 package com.example.perpustakaandigital.storage
 
 import android.content.Context
-import com.example.perpustakaandigital.model.Users
+import com.example.perpustakaandigital.model.Login
 
 
-class SharedPrefManager private constructor(private val mCtx: Context){
+class SharedPrefManager private constructor(private val mCtx: Context) {
 
     val isLoggedIn: Boolean
         get() {
             val sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE)
-            return sharedPreferences.getString("id", null) != null
+            return sharedPreferences.getString("id", "") != ""
         }
 
-    val user: Users
+    val login : Login
         get() {
             val sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE)
-            return Users(
+            return Login(
                 sharedPreferences.getString("id", null),
+                sharedPreferences.getString("nama", null),
                 sharedPreferences.getString("email", null),
-                sharedPreferences.getString("nim", null),
-                sharedPreferences.getString("nama", null)
+                sharedPreferences.getString("hakakses", null),
+                sharedPreferences.getString("password", null)
             )
         }
 
 
-    fun saveUser(user: Users) {
+    fun saveUser(login: Login) {
 
         val sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE)
         val editor = sharedPreferences.edit()
 
-        editor.putString("id", user.id_anggota)
-        editor.putString("email", user.email)
-        editor.putString("nim", user.nim)
-        editor.putString("name", user.nama)
+        editor.putString("id", login.id_anggota)
+        editor.putString("email", login.email)
+        editor.putString("nama", login.nama)
+        editor.putString("hakakses", login.hak_akses)
+        editor.putString("password", login.password)
 
         editor.apply()
 
@@ -43,14 +45,7 @@ class SharedPrefManager private constructor(private val mCtx: Context){
         val editor = sharedPreferences.edit()
         editor.clear()
         editor.apply()
-    }
-
-    fun logout(): Boolean {
-        val sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE)
-        val editor = sharedPreferences.edit()
-        editor.clear()
-        editor.apply()
-        return true
+        editor.commit()
     }
 
     companion object {
@@ -64,4 +59,5 @@ class SharedPrefManager private constructor(private val mCtx: Context){
             return mInstance as SharedPrefManager
         }
     }
+
 }

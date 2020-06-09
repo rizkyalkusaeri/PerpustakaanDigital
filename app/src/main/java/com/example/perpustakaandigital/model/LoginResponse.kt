@@ -1,12 +1,27 @@
 package com.example.perpustakaandigital.model
 
+import android.os.Parcelable
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.Parcelize
 
 data class LoginResponse(
-    @SerializedName("id")
+
+    @SerializedName("status")
     @Expose
-    val id: String? = null,
+    val status: Boolean,
+
+    @SerializedName("message")
+    @Expose
+    val message: String,
+
+    @SerializedName("data")
+    @Expose
+    val users: Login
+)
+
+@Parcelize
+data class Login(
 
     @SerializedName("id_anggota")
     @Expose
@@ -16,6 +31,10 @@ data class LoginResponse(
     @Expose
     val email: String? = null,
 
+    @SerializedName("nama")
+    @Expose
+    val nama: String? = null,
+
     @SerializedName("password")
     @Expose
     val password: String? = null,
@@ -23,4 +42,4 @@ data class LoginResponse(
     @SerializedName("hak_akses")
     @Expose
     val hak_akses: String? = null
-)
+) : Parcelable

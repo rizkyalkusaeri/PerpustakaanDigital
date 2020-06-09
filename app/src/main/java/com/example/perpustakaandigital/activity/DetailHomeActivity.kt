@@ -2,37 +2,53 @@
 
 package com.example.perpustakaandigital.activity
 
-import android.Manifest
 import android.app.DownloadManager
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.os.Environment
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.example.perpustakaandigital.R
-import com.example.perpustakaandigital.activity.ConstantUtils.Companion.BASE_URL
-import com.example.perpustakaandigital.activity.ConstantUtils.Companion.MAHASISWA_EXTRA
-import com.example.perpustakaandigital.activity.ConstantUtils.Companion.PDF_URL
-import com.example.perpustakaandigital.activity.ConstantUtils.Companion.SAVE_FILE
-import com.example.perpustakaandigital.activity.ConstantUtils.Companion.SAVE_JUDUL
-import com.example.perpustakaandigital.activity.ConstantUtils.Companion.SAVE_KEILMUAN
-import com.example.perpustakaandigital.activity.ConstantUtils.Companion.SAVE_NIM
-import com.example.perpustakaandigital.activity.ConstantUtils.Companion.SAVE_PASS
-import com.example.perpustakaandigital.activity.ConstantUtils.Companion.SAVE_PENULIS
+import com.example.perpustakaandigital.utils.ConstantUtils.Companion.MAHASISWA_EXTRA
+import com.example.perpustakaandigital.utils.ConstantUtils.Companion.PDF_URL
+import com.example.perpustakaandigital.utils.ConstantUtils.Companion.SAVE_FILE
+import com.example.perpustakaandigital.utils.ConstantUtils.Companion.SAVE_JUDUL
+import com.example.perpustakaandigital.utils.ConstantUtils.Companion.SAVE_KEILMUAN
+import com.example.perpustakaandigital.utils.ConstantUtils.Companion.SAVE_NIM
+import com.example.perpustakaandigital.utils.ConstantUtils.Companion.SAVE_PASS
+import com.example.perpustakaandigital.utils.ConstantUtils.Companion.SAVE_PENULIS
+import com.example.perpustakaandigital.activity.pdf.PdfActivity
+import com.example.perpustakaandigital.database.AppDatabase
+import com.example.perpustakaandigital.database.SkripsiEntity
 import com.example.perpustakaandigital.model.Data
+import com.example.perpustakaandigital.presenter.DevicePresenter
+import com.example.perpustakaandigital.utils.ConstantUtils.Companion.SAVE_ID
+import com.example.perpustakaandigital.view.DeviceView
 import kotlinx.android.synthetic.main.activity_detail_home.*
-import java.io.FileOutputStream
 
+@Suppress("DEPRECATION")
 class DetailHomeActivity : AppCompatActivity() {
 
     private val STORAGE_PERMISSION_CODE: Int = 1000
     private lateinit var data : ArrayList<Data>
+    private lateinit var devicePresenter: DeviceView.DevicePresenter
+    private lateinit var skripsiDatabase: AppDatabase
+
+    private val skripsiEntity = SkripsiEntity()
+    private var isBorrow = false
+
     var position: Int = 1
 
+    private var menuItem: Menu? = null
+
+    var id_skripsi: String? = null
     var judul_skripsi: String? = null
     var nim_penulis: String?= null
     var penulis: String?= null
@@ -45,9 +61,8 @@ class DetailHomeActivity : AppCompatActivity() {
         setContentView(R.layout.activity_detail_home)
 
         init()
+        pinjamState()
 
-        data = intent.getParcelableArrayListExtra(MAHASISWA_EXTRA)
-        position = intent.getIntExtra("position",-1)
 
         if (savedInstanceState == null){
             showDetailHome()
@@ -57,24 +72,24 @@ class DetailHomeActivity : AppCompatActivity() {
             showDetailHome()
         }
 
-        btnDownload.setOnClickListener {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-                if(checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) ==
-                        PackageManager.PERMISSION_DENIED){
-                    //permission denied
-
-                    requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), STORAGE_PERMISSION_CODE)
-                }
-                else{
-                    //permission already granted
-                    startDownloading()
-                }
-            }
-            else {
-                //system os is less than
-                startDownloading()
-            }
+        btn_open.setOnClickListener {
+            val intent = Intent(this, PdfActivity::class.java)
+            intent.putExtra("filename",file_pdf)
+            intent.putExtra("password",pass_pdf)
+            startActivity(intent)
         }
+
+//        btn_borrow.setOnClickListener {
+//
+//            if (isBorrow)
+//            {
+//                removeFromDevice()
+//            } else {
+//                addToDevice()
+//                isBorrow = !isBorrow
+//                setPinjam()
+//            }
+//        }
 
     }
 
@@ -112,6 +127,7 @@ class DetailHomeActivity : AppCompatActivity() {
     }
 
     fun showDetailHome() {
+        id_skripsi = data.get(position).id.toString()
         judul_skripsi = data.get(position).judul_skripsi.toString()
         nim_penulis = data.get(position).nim_penulis.toString()
         penulis = data.get(position).penulis.toString()
@@ -128,12 +144,13 @@ class DetailHomeActivity : AppCompatActivity() {
         super.onRestoreInstanceState(savedInstanceState)
         layout_data.visibility = View.VISIBLE
 
-        judul_skripsi = savedInstanceState?.getString(SAVE_JUDUL)
-        nim_penulis = savedInstanceState?.getString(SAVE_NIM)
-        penulis = savedInstanceState?.getString(SAVE_PENULIS)
-        kelompok_keilmuan = savedInstanceState?.getString(SAVE_KEILMUAN)
-        file_pdf = savedInstanceState?.getString(SAVE_FILE)
-        pass_pdf = savedInstanceState?.getString(SAVE_PASS)
+        id_skripsi = savedInstanceState.getString(SAVE_ID)
+        judul_skripsi = savedInstanceState.getString(SAVE_JUDUL)
+        nim_penulis = savedInstanceState.getString(SAVE_NIM)
+        penulis = savedInstanceState.getString(SAVE_PENULIS)
+        kelompok_keilmuan = savedInstanceState.getString(SAVE_KEILMUAN)
+        file_pdf = savedInstanceState.getString(SAVE_FILE)
+        pass_pdf = savedInstanceState.getString(SAVE_PASS)
 
         getDetailMahasiswa()
     }
@@ -155,6 +172,13 @@ class DetailHomeActivity : AppCompatActivity() {
         supportActionBar?.setHomeButtonEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowTitleEnabled(false)
+
+        data = intent.getParcelableArrayListExtra(MAHASISWA_EXTRA)
+        position = intent.getIntExtra("position",-1)
+
+
+        skripsiDatabase = AppDatabase.getInstance(this)
+        devicePresenter = DevicePresenter(skripsiDatabase.skripsiDao())
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -166,8 +190,71 @@ class DetailHomeActivity : AppCompatActivity() {
         tvDetailNim.text = nim_penulis
         tvDetailPenulis.text = penulis
         tvDetailKk.text = kelompok_keilmuan
-        tvDetailFile.text = file_pdf
-        tvDetailPass.text = pass_pdf
+    }
+
+    private fun addToDevice(){
+        skripsiEntity.skripsiId = data.get(position).id.toString()
+        skripsiEntity.nim_penulis = data.get(position).nim_penulis.toString()
+        skripsiEntity.penulis = data.get(position).penulis.toString()
+        skripsiEntity.judul_skripsi = data.get(position).judul_skripsi.toString()
+        skripsiEntity.kelompok_keilmuan = data.get(position).kelompok_keilmuan.toString()
+        skripsiEntity.file_pdf = data.get(position).file_pdf.toString()
+        skripsiEntity.pass_pdf = data.get(position).pass_pdf.toString()
+
+        devicePresenter.insertSkripsi(skripsiEntity)
+        Toast.makeText(this, "Berhasil Meminjam Skripsi", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun removeFromDevice(){
+        id_skripsi?.let { devicePresenter.deleteSkripsi(it) }
+        Toast.makeText(this, "Berhasil Mengembalikkan Skripsi", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun setPinjam(){
+        if (isBorrow)
+            menuItem?.getItem(0)?.icon = ContextCompat.getDrawable(this, R.drawable.ic_done_black_24dp)
+        else
+            menuItem?.getItem(0)?.icon = ContextCompat.getDrawable(this, R.drawable.ic_file_download_black_24dp)
+
+    }
+
+    private fun pinjamState(){
+        val pinjam = id_skripsi?.let { skripsiDatabase.skripsiDao().getSkripsiById(it) }
+        if (pinjam != null) {
+            if (pinjam.isNotEmpty()) isBorrow = true
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.activity_detail,menu)
+        menuItem = menu
+        setPinjam()
+        return true
+
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        return when (item?.itemId){
+            R.id.add_to_device ->{
+                if (isBorrow)
+                    removeFromDevice()
+                else
+                    addToDevice()
+
+                    isBorrow = !isBorrow
+                    setPinjam()
+                    true
+            }
+            else -> {
+                return super.onOptionsItemSelected(item)
+            }
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        AppDatabase.destroyInstance()
+        devicePresenter.onDestroy()
     }
 
 }

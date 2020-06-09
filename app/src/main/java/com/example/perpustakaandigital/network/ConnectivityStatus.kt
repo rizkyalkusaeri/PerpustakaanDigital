@@ -3,6 +3,7 @@ package com.example.perpustakaandigital.network
 import android.content.Context
 import android.net.ConnectivityManager
 
+@Suppress("DEPRECATION")
 class ConnectivityStatus {
     companion object{
         fun isConnected(context: Context?): Boolean{
