@@ -17,8 +17,8 @@ class SharedPrefManager private constructor(private val mCtx: Context) {
             val sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE)
             return Login(
                 sharedPreferences.getString("id", null),
-                sharedPreferences.getString("nama", null),
                 sharedPreferences.getString("email", null),
+                sharedPreferences.getString("nama", null),
                 sharedPreferences.getString("hakakses", null),
                 sharedPreferences.getString("password", null)
             )

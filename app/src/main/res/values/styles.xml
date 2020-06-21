@@ -31,6 +31,10 @@
         <item name="android:focusableInTouchMode">true</item>
     </style>
 
+    <style name="headerprofile" parent="parent">
+        <item name="android:background">#ffffff</item>
+    </style>
+
     <style name="headerText" parent="parent">
         <item name="android:textSize">@dimen/headerTextSize</item>
         <item name="android:textAlignment">center</item>
@@ -38,7 +42,7 @@
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="loginCard" parent="parent"></style>
+    <style name="loginCard" parent="parent" />
 
     <style name="linearParent" parent="parent">
         <item name="android:orientation">vertical</item>

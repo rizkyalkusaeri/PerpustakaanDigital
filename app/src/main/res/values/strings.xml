@@ -38,4 +38,29 @@
     <string name="Pinjam">Pinjam</string>
     <string name="kosong">Belum Ada Data</string>
     <string name="add_to_borrow">Pinjam</string>
+    <string name="search_skripsi">Search Skripsi</string>
+    <string name="navigation_buku">Buku</string>
+    <string name="penerbit">Penerbit</string>
+    <string name="edisi">Edisi</string>
+    <string name="jumlahbuku">Jumlah Buku</string>
+    <string name="nama_lengkap">Nama Lengkap</string>
+    <string name="ubah_password">Ubah Password</string>
+    <string name="login">Login</string>
+    <string name="imagelogo">ImageLogo</string>
+    <string name="masukkan_password_lama">Masukkan Password Lama</string>
+    <string name="masukkan_password_baru">Masukkan Password Baru</string>
+    <string name="sedang_mendownload_data">Sedang Mendownload Data …</string>
+    <string name="kembalikkan">Return</string>
+
+    <string name="placeholder_table_of_contents">Table of Contents Placeholder</string>
+    <string name="placeholder_table_of_contents_no_data">No Table of Contents for Document</string>
+    <string name="placeholder_table_of_contents_element_title">Chapter 1</string>
+    <string name="placeholder_table_of_contents_element_page">Page 1</string>
+    <string name="placeholder_reader_title">Reader Title Placeholder</string>
+    <string name="pdf_reader_accessibility_toc">Show table of contents</string>
+    <string name="page_number">Page Number</string>
+    <string name="textview">TextView</string>
+    <string name="textview">TextView</string>
+    <string name="textview">TextView</string>
+    <string name="textview">TextView</string>
 </resources>

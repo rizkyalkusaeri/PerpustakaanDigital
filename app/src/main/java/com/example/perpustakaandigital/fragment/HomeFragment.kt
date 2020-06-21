@@ -2,10 +2,10 @@
 
 package com.example.perpustakaandigital.fragment
 
+import android.annotation.SuppressLint
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import android.widget.SearchView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -14,8 +14,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.perpustakaandigital.R
-import com.example.perpustakaandigital.utils.ConstantUtils.Companion.API_KEY
-import com.example.perpustakaandigital.utils.ConstantUtils.Companion.STATE_SAVED
 import com.example.perpustakaandigital.adapter.HomeAdapter
 import com.example.perpustakaandigital.model.Data
 import com.example.perpustakaandigital.model.HomeResponse
@@ -24,6 +22,8 @@ import com.example.perpustakaandigital.network.HomeDataSource
 import com.example.perpustakaandigital.network.NetworkError
 import com.example.perpustakaandigital.network.NetworkProvider
 import com.example.perpustakaandigital.repository.MahasiswaImplementation
+import com.example.perpustakaandigital.utils.ConstantUtils.Companion.API_KEY
+import com.example.perpustakaandigital.utils.ConstantUtils.Companion.STATE_SAVED
 import com.example.perpustakaandigital.view.HomeView
 import com.example.perpustakaandigital.viewmodel.HomeViewModel
 import retrofit2.HttpException
@@ -50,9 +50,6 @@ class HomeFragment : Fragment(), HomeView.View {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        recyclerView = view.findViewById(R.id.rv_home)
-        swipeRefresh = view.findViewById(R.id.swipe_refresh)
 
         prepare(view)
         scrollListener()
@@ -107,9 +104,14 @@ class HomeFragment : Fragment(), HomeView.View {
         }
     }
 
+    @SuppressLint("FragmentLiveDataObserve")
     private fun prepare(view: View){
+
+        recyclerView = view.findViewById(R.id.rv_home)
+        swipeRefresh = view.findViewById(R.id.swipe_refresh)
+
         homeViewModel = ViewModelProviders.of(this).get(HomeViewModel::class.java)
-        homeViewModel.getDataMahasiswa().observe(this, getData)
+        homeViewModel.getDataMahasiswa().observe(viewLifecycleOwner, getData)
 
         adapter = HomeAdapter(this.requireActivity())
         adapter.notifyDataSetChanged()
@@ -151,17 +153,5 @@ class HomeFragment : Fragment(), HomeView.View {
             }
         })
     }
-
-    private val getMahasiswa =
-        Observer<ArrayList<Data>>{mahasiswaItems ->
-            if(mahasiswaItems != null){
-                if (page == 1){
-                    adapter.setData(mahasiswaItems)
-                } else{
-                    adapter.refreshAdapter(mahasiswaItems)
-                }
-            }
-
-        }
 
 }

@@ -26,7 +26,7 @@ data class Data(
 
         @SerializedName("id_skripsi")
         @Expose
-        val id: Int? = null,
+        val id: String? = null,
 
         @SerializedName("nim_penulis")
         @Expose

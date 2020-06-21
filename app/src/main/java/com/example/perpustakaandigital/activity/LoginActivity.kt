@@ -6,9 +6,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.perpustakaandigital.R
-import com.example.perpustakaandigital.utils.ConstantUtils.Companion.API_KEY
 import com.example.perpustakaandigital.model.LoginResponse
-import com.example.perpustakaandigital.model.Users
 import com.example.perpustakaandigital.network.ConnectivityStatus
 import com.example.perpustakaandigital.network.HomeDataSource
 import com.example.perpustakaandigital.network.NetworkError
@@ -16,8 +14,9 @@ import com.example.perpustakaandigital.network.NetworkProvider
 import com.example.perpustakaandigital.presenter.LoginPresenter
 import com.example.perpustakaandigital.repository.MahasiswaImplementation
 import com.example.perpustakaandigital.storage.SharedPrefManager
-import com.example.perpustakaandigital.view.LoginView
+import com.example.perpustakaandigital.utils.ConstantUtils.Companion.API_KEY
 import com.example.perpustakaandigital.utils.snackbar
+import com.example.perpustakaandigital.view.LoginView
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.layout_login.*
 import retrofit2.HttpException
@@ -27,10 +26,6 @@ class LoginActivity : AppCompatActivity(), LoginView.View {
 
     private lateinit var presenter: LoginView.Presenter
     private var dataSource: HomeDataSource? = null
-
-    private val listUser = ArrayList<Users>()
-
-    private var position : Int? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

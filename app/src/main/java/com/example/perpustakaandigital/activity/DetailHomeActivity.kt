@@ -1,20 +1,14 @@
-@file:Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
-
 package com.example.perpustakaandigital.activity
 
-import android.app.DownloadManager
-import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
 import android.view.Menu
-import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
+import com.downloader.Error
+import com.downloader.OnDownloadListener
+import com.downloader.PRDownloader
 import com.example.perpustakaandigital.R
 import com.example.perpustakaandigital.utils.ConstantUtils.Companion.MAHASISWA_EXTRA
 import com.example.perpustakaandigital.utils.ConstantUtils.Companion.PDF_URL
@@ -26,22 +20,18 @@ import com.example.perpustakaandigital.utils.ConstantUtils.Companion.SAVE_PASS
 import com.example.perpustakaandigital.utils.ConstantUtils.Companion.SAVE_PENULIS
 import com.example.perpustakaandigital.activity.pdf.PdfActivity
 import com.example.perpustakaandigital.database.AppDatabase
-import com.example.perpustakaandigital.database.SkripsiEntity
 import com.example.perpustakaandigital.model.Data
-import com.example.perpustakaandigital.presenter.DevicePresenter
-import com.example.perpustakaandigital.utils.ConstantUtils.Companion.SAVE_ID
-import com.example.perpustakaandigital.view.DeviceView
+import com.example.perpustakaandigital.utils.FileUtils
 import kotlinx.android.synthetic.main.activity_detail_home.*
+import java.io.File
 
-@Suppress("DEPRECATION")
+@Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 class DetailHomeActivity : AppCompatActivity() {
 
     private val STORAGE_PERMISSION_CODE: Int = 1000
     private lateinit var data : ArrayList<Data>
-    private lateinit var devicePresenter: DeviceView.DevicePresenter
     private lateinit var skripsiDatabase: AppDatabase
 
-    private val skripsiEntity = SkripsiEntity()
     private var isBorrow = false
 
     var position: Int = 1
@@ -62,15 +52,14 @@ class DetailHomeActivity : AppCompatActivity() {
 
         init()
         pinjamState()
+        downloadState()
 
 
         if (savedInstanceState == null){
             showDetailHome()
         }
 
-        swipe_refresh.setOnRefreshListener {
-            showDetailHome()
-        }
+        swipe_refresh.isRefreshing = false
 
         btn_open.setOnClickListener {
             val intent = Intent(this, PdfActivity::class.java)
@@ -79,52 +68,44 @@ class DetailHomeActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-//        btn_borrow.setOnClickListener {
-//
-//            if (isBorrow)
-//            {
-//                removeFromDevice()
-//            } else {
-//                addToDevice()
-//                isBorrow = !isBorrow
-//                setPinjam()
-//            }
-//        }
+        btn_borrow.setOnClickListener {
+            pdfAction()
+        }
 
     }
 
-    private fun startDownloading() {
-        val request = DownloadManager.Request(Uri.parse(PDF_URL + file_pdf))
+    private fun downloadPdf(url: String, dirPath: String, fileName: String){
+        PRDownloader.download(url,dirPath,fileName)
+            .build()
+            .start(object : OnDownloadListener {
+                override fun onDownloadComplete() {
+                    Toast.makeText(this@DetailHomeActivity, "Download Selesai", Toast.LENGTH_LONG).show()
+                    progressBar_Detail.visibility = View.GONE
+                    btn_borrow.visibility = View.GONE
+                    btn_open.visibility = View.VISIBLE
+                }
 
-        request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE)
-        request.setTitle(file_pdf)
-        request.setDescription("The File is Downloading")
+                override fun onError(error: Error?) {
+                    Toast.makeText(this@DetailHomeActivity, "Error in downloading file : $error",
+                        Toast.LENGTH_LONG)
+                        .show()
+                }
 
-        request.allowScanningByMediaScanner()
-        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "${System.currentTimeMillis()}")
-
-        val manager = getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
-        manager.enqueue(request)
+            })
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        when(requestCode){
-            STORAGE_PERMISSION_CODE -> {
-                if (grantResults.isNotEmpty() && grantResults[0] ==
-                        PackageManager.PERMISSION_GRANTED){
-                    startDownloading()
-                }
-                else{
-                    Toast.makeText(this, "Permission Denied", Toast.LENGTH_LONG).show()
-                }
-            }
+    private fun pdfAction(){
+        progressBar_Detail.visibility = View.VISIBLE
+        val fileName = file_pdf
+        if (fileName != null) {
+            downloadPdf(
+                PDF_URL + file_pdf,
+                FileUtils.getRootDirPath(this),
+                fileName
+            )
         }
     }
+
 
     fun showDetailHome() {
         id_skripsi = data.get(position).id.toString()
@@ -139,12 +120,10 @@ class DetailHomeActivity : AppCompatActivity() {
     }
 
 
-
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         layout_data.visibility = View.VISIBLE
 
-        id_skripsi = savedInstanceState.getString(SAVE_ID)
         judul_skripsi = savedInstanceState.getString(SAVE_JUDUL)
         nim_penulis = savedInstanceState.getString(SAVE_NIM)
         penulis = savedInstanceState.getString(SAVE_PENULIS)
@@ -173,12 +152,13 @@ class DetailHomeActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowTitleEnabled(false)
 
+        PRDownloader.initialize(applicationContext)
+
         data = intent.getParcelableArrayListExtra(MAHASISWA_EXTRA)
         position = intent.getIntExtra("position",-1)
 
 
         skripsiDatabase = AppDatabase.getInstance(this)
-        devicePresenter = DevicePresenter(skripsiDatabase.skripsiDao())
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -192,30 +172,17 @@ class DetailHomeActivity : AppCompatActivity() {
         tvDetailKk.text = kelompok_keilmuan
     }
 
-    private fun addToDevice(){
-        skripsiEntity.skripsiId = data.get(position).id.toString()
-        skripsiEntity.nim_penulis = data.get(position).nim_penulis.toString()
-        skripsiEntity.penulis = data.get(position).penulis.toString()
-        skripsiEntity.judul_skripsi = data.get(position).judul_skripsi.toString()
-        skripsiEntity.kelompok_keilmuan = data.get(position).kelompok_keilmuan.toString()
-        skripsiEntity.file_pdf = data.get(position).file_pdf.toString()
-        skripsiEntity.pass_pdf = data.get(position).pass_pdf.toString()
-
-        devicePresenter.insertSkripsi(skripsiEntity)
-        Toast.makeText(this, "Berhasil Meminjam Skripsi", Toast.LENGTH_SHORT).show()
-    }
-
-    private fun removeFromDevice(){
-        id_skripsi?.let { devicePresenter.deleteSkripsi(it) }
-        Toast.makeText(this, "Berhasil Mengembalikkan Skripsi", Toast.LENGTH_SHORT).show()
-    }
-
-    private fun setPinjam(){
-        if (isBorrow)
-            menuItem?.getItem(0)?.icon = ContextCompat.getDrawable(this, R.drawable.ic_done_black_24dp)
-        else
-            menuItem?.getItem(0)?.icon = ContextCompat.getDrawable(this, R.drawable.ic_file_download_black_24dp)
-
+    private fun downloadState(){
+        val file_name_state = data.get(position).file_pdf.toString()
+        val dirPath = FileUtils.getRootDirPath(this)
+        val downloadFile = File(dirPath,file_name_state)
+        if (downloadFile.exists()){
+            btn_borrow.visibility = View.GONE
+            btn_open.visibility = View.VISIBLE
+        } else {
+            btn_borrow.visibility = View.VISIBLE
+            btn_open.visibility = View.GONE
+        }
     }
 
     private fun pinjamState(){
@@ -225,36 +192,9 @@ class DetailHomeActivity : AppCompatActivity() {
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.activity_detail,menu)
-        menuItem = menu
-        setPinjam()
-        return true
-
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        return when (item?.itemId){
-            R.id.add_to_device ->{
-                if (isBorrow)
-                    removeFromDevice()
-                else
-                    addToDevice()
-
-                    isBorrow = !isBorrow
-                    setPinjam()
-                    true
-            }
-            else -> {
-                return super.onOptionsItemSelected(item)
-            }
-        }
-    }
-
     override fun onDestroy() {
         super.onDestroy()
         AppDatabase.destroyInstance()
-        devicePresenter.onDestroy()
     }
 
 }

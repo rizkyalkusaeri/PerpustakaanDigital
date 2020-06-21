@@ -9,7 +9,7 @@ import androidx.room.Query
 interface SkripsiDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertSkripsi(skripsiEntity: SkripsiEntity): Long
+    fun insertSkripsi(skripsiEntity: SkripsiEntity)
 
     @Query("SELECT * FROM tSkripsi")
     fun getAllSkripsi(): Array<SkripsiEntity>

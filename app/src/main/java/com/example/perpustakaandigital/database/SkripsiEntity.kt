@@ -1,7 +1,6 @@
 package com.example.perpustakaandigital.database
 
 import android.os.Parcelable
-import androidx.annotation.NonNull
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -9,9 +8,8 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 @Entity(tableName = "tSkripsi")
-data class SkripsiEntity (
+data class SkripsiEntity(
 
-    @NonNull
     @ColumnInfo(name = "id")
     @PrimaryKey(autoGenerate = true)
     var id: Int? = null,

@@ -25,15 +25,4 @@ class LoginView {
         fun onDestroy()
     }
 
-    interface ViewModel{
-        fun onLoginButtonClick(
-            apiKey: String,
-            email: String,
-            password: String,
-            view: View,
-            mahasiswa: MahasiswaImplementation
-        )
-
-        fun onDestroy()
-    }
 }

@@ -1,11 +1,6 @@
 package com.example.perpustakaandigital.presenter
 
-import android.widget.Toast
-import androidx.lifecycle.LiveData
-import com.example.perpustakaandigital.model.Data
 import com.example.perpustakaandigital.model.LoginResponse
-import com.example.perpustakaandigital.model.Users
-import com.example.perpustakaandigital.model.UsersResponse
 import com.example.perpustakaandigital.repository.MahasiswaImplementation
 import com.example.perpustakaandigital.view.LoginView
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -18,17 +13,12 @@ class LoginPresenter(
     private val login: MahasiswaImplementation?
 ): LoginView.Presenter {
 
-    private val listUser = ArrayList<Users>()
-
-    fun getDataMahasiswa(): ArrayList<Users> {
-        return listUser
-    }
 
     private val compositeDisposable = CompositeDisposable()
 
     override fun onLoginButtonClick(apiKey: String, email: String, password: String) {
         view.showProgressBar()
-        if(email.isNullOrEmpty() || password.isNullOrEmpty()){
+        if(email.isEmpty() || password.isEmpty()){
             view.onFailure("Invalid email or password")
             return
         }  else {

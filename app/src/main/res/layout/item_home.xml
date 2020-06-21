@@ -18,7 +18,8 @@
             android:layout_width="130dp"
             android:layout_height="150dp"
             android:scaleType="fitXY"
-            android:src="@drawable/icon"
+            android:src="@drawable/logo"
+            android:contentDescription="@string/imagelogo"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -42,7 +43,7 @@
             android:layout_below="@id/txt_title"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
-            android:layout_toRightOf="@id/pdf_file"
+            android:layout_toEndOf="@id/pdf_file"
             android:ellipsize="end"
             android:maxLines="3"
             android:text="@string/nim"
@@ -56,7 +57,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_toEndOf="@+id/txt_nim"
-            android:text="TextView"
+            android:text="@string/textview"
             app:layout_constraintStart_toEndOf="@+id/pdf_file"
             app:layout_constraintTop_toBottomOf="@+id/txt_nim" />
 
@@ -66,7 +67,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_toEndOf="@+id/txt_penulis"
-            android:text="TextView"
+            android:text="@string/textview"
             android:visibility="invisible"
             app:layout_constraintStart_toEndOf="@+id/pdf_file"
             app:layout_constraintTop_toBottomOf="@+id/txt_penulis" />
@@ -77,7 +78,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_toEndOf="@+id/txt_kk"
-            android:text="TextView"
+            android:text="@string/textview"
             android:visibility="invisible"
             app:layout_constraintStart_toEndOf="@+id/pdf_file"
             app:layout_constraintTop_toBottomOf="@+id/txt_kk" />
@@ -89,7 +90,7 @@
             android:layout_marginStart="16dp"
             android:layout_toEndOf="@+id/txt_file"
             android:visibility="invisible"
-            android:text="TextView"
+            android:text="@string/textview"
             app:layout_constraintStart_toEndOf="@+id/pdf_file"
             app:layout_constraintTop_toBottomOf="@+id/txt_file" />
     </androidx.constraintlayout.widget.ConstraintLayout>

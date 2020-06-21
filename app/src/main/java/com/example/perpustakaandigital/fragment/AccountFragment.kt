@@ -11,6 +11,7 @@ import com.example.perpustakaandigital.model.Login
 import com.example.perpustakaandigital.storage.SharedPrefManager
 import kotlinx.android.synthetic.main.fragment_account.*
 import com.example.perpustakaandigital.R
+import com.example.perpustakaandigital.activity.UbahActivity
 
 
 /**
@@ -33,9 +34,13 @@ class AccountFragment : Fragment() {
 
         login = SharedPrefManager.getInstance(view.context).login
 
-        nama_profile.text = login.nama
-        tv_email.text = login.email
-        tv_hakakses.text = login.hak_akses
+        tv_email_profil.text = login.email
+        tv_nama_profil.text = login.nama
+
+        tv_ubah_password.setOnClickListener {
+            val intent = Intent(activity, UbahActivity::class.java)
+            startActivity(intent)
+        }
 
         btn_logout.setOnClickListener {
             logout()

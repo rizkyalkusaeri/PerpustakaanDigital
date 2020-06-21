@@ -5,7 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = [SkripsiEntity::class], version = 6,exportSchema = false)
+@Database(entities = [SkripsiEntity::class], version = 16)
 abstract class AppDatabase: RoomDatabase() {
 
     abstract fun skripsiDao(): SkripsiDao

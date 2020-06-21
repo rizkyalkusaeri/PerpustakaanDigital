@@ -2,11 +2,12 @@ package com.example.perpustakaandigital.activity
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.perpustakaandigital.R
 import com.example.perpustakaandigital.fragment.AccountFragment
-import com.example.perpustakaandigital.fragment.DeviceFragment
+import com.example.perpustakaandigital.fragment.BukuFragment
 import com.example.perpustakaandigital.fragment.HomeFragment
 import com.example.perpustakaandigital.storage.SharedPrefManager
 import com.example.perpustakaandigital.utils.ConstantUtils
@@ -22,8 +23,8 @@ class MainActivity : AppCompatActivity() {
         BottomNavigationView.OnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.navigation_home -> fragment = HomeFragment()
-                R.id.navigation_device -> fragment = DeviceFragment()
                 R.id.navigation_account -> fragment = AccountFragment()
+                R.id.navigation_buku -> fragment = BukuFragment()
             }
 
             supportFragmentManager.beginTransaction()
@@ -55,6 +56,12 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.activity_main,menu)
+        return true
+    }
+
+
     override fun onSaveInstanceState(outState: Bundle) {
         supportFragmentManager.putFragment(outState, ConstantUtils.KEY_FRAGMENT, fragment!!)
         super.onSaveInstanceState(outState)
@@ -69,4 +76,5 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
     }
+
 }
