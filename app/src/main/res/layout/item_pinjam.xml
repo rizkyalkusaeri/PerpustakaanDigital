@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/margin_small_size"
+    app:cardElevation="3dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/skripsi_item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp">
+
+        <ImageView
+            android:id="@+id/pdf_file"
+            android:layout_width="130dp"
+            android:layout_height="150dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/logo"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/txt_title_pinjam"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_toEndOf="@id/pdf_file"
+            android:text="@string/judul_skripsi"
+            android:textColor="@color/colorAccent"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@+id/pdf_file"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/txt_nim_pinjam"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/txt_title_pinjam"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_toRightOf="@id/pdf_file"
+            android:ellipsize="end"
+            android:maxLines="3"
+            android:text="@string/nim"
+            android:textColor="@color/colorAccent"
+            app:layout_constraintStart_toEndOf="@+id/pdf_file"
+            app:layout_constraintTop_toBottomOf="@+id/txt_title_pinjam" />
+
+        <TextView
+            android:id="@+id/txt_penulis_pinjam"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_toEndOf="@+id/txt_nim_pinjam"
+            android:text="@string/penulis"
+            app:layout_constraintStart_toEndOf="@+id/pdf_file"
+            app:layout_constraintTop_toBottomOf="@+id/txt_nim_pinjam" />
+
+        <TextView
+            android:id="@+id/txt_kk_pinjam"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_toEndOf="@+id/txt_penulis_pinjam"
+            android:text="@string/kelompok"
+            android:visibility="invisible"
+            app:layout_constraintStart_toEndOf="@+id/pdf_file"
+            app:layout_constraintTop_toBottomOf="@+id/txt_penulis_pinjam" />
+
+        <Button
+            android:id="@+id/btn_open_pinjam"
+            android:background="@drawable/buttonstyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_toEndOf="@+id/txt_kk_pinjam"
+            android:text="@string/open"
+            app:layout_constraintStart_toEndOf="@+id/pdf_file"
+            app:layout_constraintTop_toBottomOf="@+id/txt_kk_pinjam" />
+
+        <Button
+            android:id="@+id/btn_return_pinjam"
+            android:background="@drawable/buttonstyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_toEndOf="@+id/txt_kk_pinjam"
+            android:text="@string/kembalikkan"
+            app:layout_constraintStart_toEndOf="@+id/btn_open_pinjam"
+            app:layout_constraintTop_toBottomOf="@+id/txt_kk_pinjam" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>
