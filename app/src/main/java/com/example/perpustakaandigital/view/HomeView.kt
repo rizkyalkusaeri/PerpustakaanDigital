@@ -1,8 +1,7 @@
 package com.example.perpustakaandigital.view
 
-import com.example.perpustakaandigital.model.Data
 import com.example.perpustakaandigital.model.HomeResponse
-import com.example.perpustakaandigital.repository.MahasiswaImplementation
+import com.example.perpustakaandigital.repository.MahasiswaImp
 
 class HomeView {
 
@@ -19,7 +18,7 @@ class HomeView {
             apiKey: String,
             page: Int,
             view: View,
-            mahasiswa: MahasiswaImplementation
+            mahasiswa: MahasiswaImp
         )
 
         fun onDestroy()

@@ -8,11 +8,11 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.perpustakaandigital.R
 import com.example.perpustakaandigital.model.LoginResponse
 import com.example.perpustakaandigital.network.ConnectivityStatus
-import com.example.perpustakaandigital.network.HomeDataSource
+import com.example.perpustakaandigital.network.DataSource
 import com.example.perpustakaandigital.network.NetworkError
 import com.example.perpustakaandigital.network.NetworkProvider
 import com.example.perpustakaandigital.presenter.LoginPresenter
-import com.example.perpustakaandigital.repository.MahasiswaImplementation
+import com.example.perpustakaandigital.repository.MahasiswaImp
 import com.example.perpustakaandigital.storage.SharedPrefManager
 import com.example.perpustakaandigital.utils.ConstantUtils.Companion.API_KEY
 import com.example.perpustakaandigital.utils.snackbar
@@ -25,16 +25,16 @@ import java.net.SocketTimeoutException
 class LoginActivity : AppCompatActivity(), LoginView.View {
 
     private lateinit var presenter: LoginView.Presenter
-    private var dataSource: HomeDataSource? = null
+    private var dataSource: DataSource? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
         dataSource = NetworkProvider.getClient(this)
-            ?.create(HomeDataSource::class.java)
+            ?.create(DataSource::class.java)
 
-        val repository = dataSource?.let { MahasiswaImplementation(it) }
+        val repository = dataSource?.let { MahasiswaImp(it) }
         presenter = LoginPresenter(this,repository)
 
         loginButton.setOnClickListener {

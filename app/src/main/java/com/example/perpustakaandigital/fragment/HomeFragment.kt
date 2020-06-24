@@ -5,7 +5,6 @@ package com.example.perpustakaandigital.fragment
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.*
-import android.widget.SearchView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -14,18 +13,18 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.perpustakaandigital.R
-import com.example.perpustakaandigital.adapter.HomeAdapter
+import com.example.perpustakaandigital.adapter.SkripsiAdapter
 import com.example.perpustakaandigital.model.Data
 import com.example.perpustakaandigital.model.HomeResponse
 import com.example.perpustakaandigital.network.ConnectivityStatus
-import com.example.perpustakaandigital.network.HomeDataSource
+import com.example.perpustakaandigital.network.DataSource
 import com.example.perpustakaandigital.network.NetworkError
 import com.example.perpustakaandigital.network.NetworkProvider
-import com.example.perpustakaandigital.repository.MahasiswaImplementation
+import com.example.perpustakaandigital.repository.MahasiswaImp
 import com.example.perpustakaandigital.utils.ConstantUtils.Companion.API_KEY
 import com.example.perpustakaandigital.utils.ConstantUtils.Companion.STATE_SAVED
 import com.example.perpustakaandigital.view.HomeView
-import com.example.perpustakaandigital.viewmodel.HomeViewModel
+import com.example.perpustakaandigital.viewmodel.SkripsiViewModel
 import retrofit2.HttpException
 import java.net.SocketTimeoutException
 import kotlin.properties.Delegates
@@ -34,9 +33,9 @@ import kotlin.properties.Delegates
 class HomeFragment : Fragment(), HomeView.View {
 
     private lateinit var mLayoutManager: RecyclerView.LayoutManager
-    private lateinit var homeViewModel: HomeViewModel
-    private var dataSource: HomeDataSource? = null
-    private var adapter by Delegates.notNull<HomeAdapter>()
+    private lateinit var skripsiViewModel: SkripsiViewModel
+    private var dataSource: DataSource? = null
+    private var adapter by Delegates.notNull<SkripsiAdapter>()
     private var page: Int = 1
     private var totalPage: Int? = null
     private var isLoading = false
@@ -110,10 +109,10 @@ class HomeFragment : Fragment(), HomeView.View {
         recyclerView = view.findViewById(R.id.rv_home)
         swipeRefresh = view.findViewById(R.id.swipe_refresh)
 
-        homeViewModel = ViewModelProviders.of(this).get(HomeViewModel::class.java)
-        homeViewModel.getDataMahasiswa().observe(viewLifecycleOwner, getData)
+        skripsiViewModel = ViewModelProviders.of(this).get(SkripsiViewModel::class.java)
+        skripsiViewModel.getDataMahasiswa().observe(viewLifecycleOwner, getData)
 
-        adapter = HomeAdapter(this.requireActivity())
+        adapter = SkripsiAdapter(this.requireActivity())
         adapter.notifyDataSetChanged()
 
         recyclerView.setHasFixedSize(true)
@@ -121,7 +120,7 @@ class HomeFragment : Fragment(), HomeView.View {
         recyclerView.layoutManager = mLayoutManager
 
         dataSource = NetworkProvider.getClient(view.context)
-                ?.create(HomeDataSource::class.java)
+                ?.create(DataSource::class.java)
 
         recyclerView.adapter = adapter
 
@@ -133,9 +132,9 @@ class HomeFragment : Fragment(), HomeView.View {
             }
 
     private fun showListMahasiswa(){
-        val repository = dataSource?.let { MahasiswaImplementation(it) }
+        val repository = dataSource?.let { MahasiswaImp(it) }
         if (repository != null){
-            homeViewModel.setDataMahasiswa(API_KEY, view = this,page = page, mahasiswa = repository)
+            skripsiViewModel.setDataMahasiswa(API_KEY, view = this,page = page, mahasiswa = repository)
         }
     }
 

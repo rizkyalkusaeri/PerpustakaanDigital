@@ -1,8 +1,6 @@
 package com.example.perpustakaandigital.view
 
 import com.example.perpustakaandigital.model.LoginResponse
-import com.example.perpustakaandigital.model.UsersResponse
-import com.example.perpustakaandigital.repository.MahasiswaImplementation
 
 class LoginView {
 

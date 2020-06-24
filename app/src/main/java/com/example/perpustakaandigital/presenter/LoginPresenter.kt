@@ -1,7 +1,7 @@
 package com.example.perpustakaandigital.presenter
 
 import com.example.perpustakaandigital.model.LoginResponse
-import com.example.perpustakaandigital.repository.MahasiswaImplementation
+import com.example.perpustakaandigital.repository.MahasiswaImp
 import com.example.perpustakaandigital.view.LoginView
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -10,7 +10,7 @@ import io.reactivex.subscribers.ResourceSubscriber
 
 class LoginPresenter(
     private val view: LoginView.View,
-    private val login: MahasiswaImplementation?
+    private val login: MahasiswaImp?
 ): LoginView.Presenter {
 
 

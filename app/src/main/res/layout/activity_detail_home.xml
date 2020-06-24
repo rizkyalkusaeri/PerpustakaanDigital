@@ -4,12 +4,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.DetailHomeActivity">
+    android:id="@+id/root_layout_detail"
+    tools:context=".activity.DetailSkripsiActivity">
 
     <include
-        android:id="@+id/progressBar_Detail"
+        android:id="@+id/progressbar_download"
         android:visibility="gone"
         layout="@layout/layout_progress_bar_download"/>
+    <include
+        android:id="@+id/progressbar_pinjam"
+        android:visibility="gone"
+        layout="@layout/layout_progress_bar_pinjam"/>
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar_layout"
@@ -29,8 +34,9 @@
             <ImageView
                 android:id="@+id/img_backdrop"
                 android:layout_width="match_parent"
-                android:layout_height="220dp"
+                android:layout_height="match_parent"
                 android:fitsSystemWindows="true"
+                android:src="@drawable/logo"
                 android:contentDescription="@string/poster_backdrop"
                 app:layout_collapseMode="parallax"/>
 

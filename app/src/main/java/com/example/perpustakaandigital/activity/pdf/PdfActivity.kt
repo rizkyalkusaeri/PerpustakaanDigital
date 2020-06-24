@@ -13,6 +13,7 @@ import com.example.perpustakaandigital.utils.FileUtils
 import com.example.perpustakaandigital.view.ThumbnailView
 import com.github.barteksc.pdfviewer.util.FitPolicy
 import kotlinx.android.synthetic.main.activity_pdf.*
+import kotlinx.android.synthetic.main.activity_ubah.*
 import java.io.File
 import kotlin.properties.Delegates
 
@@ -97,6 +98,12 @@ class PdfActivity : AppCompatActivity(), ThumbnailView {
     }
 
     private fun prepare() {
+        setSupportActionBar(toolbar_pdf)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+        supportActionBar?.setHomeButtonEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+
         fileNameIntent = intent.getStringExtra("filename")
         passwordIntent = intent.getStringExtra("password")
 
@@ -150,5 +157,10 @@ class PdfActivity : AppCompatActivity(), ThumbnailView {
                 ).show()
             }
             .load()    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
+    }
 
 }

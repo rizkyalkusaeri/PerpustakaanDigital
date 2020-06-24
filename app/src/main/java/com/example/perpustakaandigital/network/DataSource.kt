@@ -6,7 +6,7 @@ import io.reactivex.Flowable
 import retrofit2.Call
 import retrofit2.http.*
 
-interface HomeDataSource {
+interface DataSource {
 
     @GET("/api/skripsi")
     fun dataMahasiswa(
@@ -39,4 +39,15 @@ interface HomeDataSource {
         @Field("id_anggota") id_anggota : String,
         @Field("password") password : String
     ): Flowable<UbahPasswordResponse>
+
+    @FormUrlEncoded
+    @POST("/api/peminjaman")
+    fun userPinjam(
+        @Field("X-API-KEY")
+        apiKey : String,
+        @Field("id_skripsi") id_skripsi : String,
+        @Field("id_anggota") id_anggota : String,
+        @Field("tanggal_pinjam") tanggal_pinjam : String,
+        @Field("tanggal_pengembalian") tanggal_pengembalian : String
+    ): Flowable<PinjamResponse>
 }

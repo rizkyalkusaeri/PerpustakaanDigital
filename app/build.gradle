@@ -18,7 +18,7 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         buildConfigField 'String', 'API_KEY', '"skripsiunikom"'
-        buildConfigField 'String', 'BASE_URL', '"https://digitallibraryunikom.000webhostapp.com"'
+        buildConfigField 'String', 'BASE_URL', '"http://www.digitallibraryifunikom.xyz"'
         buildConfigField 'String', 'PDF_URL', '"https://digitallibraryunikom.000webhostapp.com/Berkas/"'
 
         consumerProguardFiles 'consumer-rules.pro'

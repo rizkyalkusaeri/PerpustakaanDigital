@@ -6,10 +6,25 @@
     android:layout_height="match_parent"
     tools:context=".activity.pdf.PdfActivity">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_pdf"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:elevation="6dp"
+        app:popupTheme="@style/AppTheme.PopupOverlay"
+        app:layout_collapseMode="pin"
+        tools:targetApi="lollipop"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <com.github.barteksc.pdfviewer.PDFView
         android:id="@+id/pdfView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:background="#ffffff"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_pdf"
+        tools:layout_editor_absoluteX="0dp" />
 
     <ProgressBar
         android:id="@+id/progressBar"

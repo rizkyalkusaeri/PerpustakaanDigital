@@ -5,14 +5,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.perpustakaandigital.model.Data
 import com.example.perpustakaandigital.model.HomeResponse
-import com.example.perpustakaandigital.repository.MahasiswaImplementation
+import com.example.perpustakaandigital.repository.MahasiswaImp
 import com.example.perpustakaandigital.view.HomeView
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subscribers.ResourceSubscriber
 
-class HomeViewModel : ViewModel(), HomeView.ViewModel {
+class SkripsiViewModel : ViewModel(), HomeView.ViewModel {
 
     private val listMahasiswa = MutableLiveData<ArrayList<Data>>()
 
@@ -21,7 +21,7 @@ class HomeViewModel : ViewModel(), HomeView.ViewModel {
         return listMahasiswa
     }
 
-    override fun setDataMahasiswa(apiKey: String,page:Int, view: HomeView.View, mahasiswa: MahasiswaImplementation) {
+    override fun setDataMahasiswa(apiKey: String,page:Int, view: HomeView.View, mahasiswa: MahasiswaImp) {
         view.showProgressBar()
 
         disposables.add(
