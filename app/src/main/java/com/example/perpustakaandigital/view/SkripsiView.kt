@@ -1,12 +1,13 @@
 package com.example.perpustakaandigital.view
 
-import com.example.perpustakaandigital.model.HomeResponse
-import com.example.perpustakaandigital.repository.MahasiswaImp
+import com.example.perpustakaandigital.model.SkripsiResponse
+import com.example.perpustakaandigital.repository.PerpusImp
 
-class HomeView {
+class SkripsiView {
+
 
     interface View{
-        fun getMahasiswaData(data: HomeResponse)
+        fun getSkripsiData(data: SkripsiResponse)
         fun noInternetConnection(message: String)
         fun showProgressBar()
         fun hideProgressBar()
@@ -14,11 +15,11 @@ class HomeView {
     }
 
     interface ViewModel{
-        fun setDataMahasiswa(
+        fun setDataSkripsi(
             apiKey: String,
             page: Int,
             view: View,
-            mahasiswa: MahasiswaImp
+            perpus: PerpusImp
         )
 
         fun onDestroy()

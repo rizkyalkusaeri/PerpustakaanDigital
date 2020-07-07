@@ -1,14 +1,13 @@
 package com.example.perpustakaandigital.view
 
-import com.example.perpustakaandigital.model.LoginResponse
-import com.example.perpustakaandigital.model.UbahPasswordResponse
+import com.example.perpustakaandigital.model.Response
 
 class UbahPasswordView {
 
     interface View{
         fun showProgressBar()
         fun hideProgressBar()
-        fun onSuccess(ubah: UbahPasswordResponse)
+        fun onSuccess(ubah: Response)
         fun onFailure(message: String)
         fun noInternetConnection(message: String)
         fun handleError(t:Throwable?)

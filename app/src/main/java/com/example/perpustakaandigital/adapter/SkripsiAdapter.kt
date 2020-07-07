@@ -12,7 +12,7 @@ import com.example.perpustakaandigital.activity.DetailSkripsiActivity
 import com.example.perpustakaandigital.model.Data
 import kotlinx.android.synthetic.main.item_home.view.*
 
-class SkripsiAdapter(private val context: Context) : RecyclerView.Adapter<SkripsiAdapter.HomeViewHolder>() {
+class SkripsiAdapter(private val context: Context) : RecyclerView.Adapter<SkripsiAdapter.SkripsiViewHolder>() {
 
     private val data = ArrayList<Data>()
 
@@ -27,8 +27,8 @@ class SkripsiAdapter(private val context: Context) : RecyclerView.Adapter<Skrips
         notifyItemRangeChanged(0,this.data.size)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int):HomeViewHolder{
-        return HomeViewHolder(
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int):SkripsiViewHolder{
+        return SkripsiViewHolder(
                 LayoutInflater.from(parent.context).inflate(R.layout.item_home,parent,false)
         )
     }
@@ -39,12 +39,12 @@ class SkripsiAdapter(private val context: Context) : RecyclerView.Adapter<Skrips
 
     }
 
-    override fun onBindViewHolder(holder: HomeViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: SkripsiViewHolder, position: Int) {
 
         holder.bind(data[holder.adapterPosition])
     }
 
-    inner class HomeViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
+    inner class SkripsiViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
         fun bind(data: Data){
             with(itemView){
 
@@ -55,10 +55,6 @@ class SkripsiAdapter(private val context: Context) : RecyclerView.Adapter<Skrips
                 txt_penulis.text = data.penulis
 
                 txt_kk.text = data.kelompok_keilmuan
-
-                txt_file.text = data.file_pdf
-
-                txt_pass.text = data.pass_pdf
 
             }
         }

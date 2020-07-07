@@ -3,12 +3,13 @@ package com.example.perpustakaandigital.activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
+import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.perpustakaandigital.R
 import com.example.perpustakaandigital.fragment.AccountFragment
-import com.example.perpustakaandigital.fragment.BukuFragment
-import com.example.perpustakaandigital.fragment.HomeFragment
+import com.example.perpustakaandigital.fragment.PeminjamanFragment
+import com.example.perpustakaandigital.fragment.SkripsiFragment
 import com.example.perpustakaandigital.storage.SharedPrefManager
 import com.example.perpustakaandigital.utils.ConstantUtils
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -17,14 +18,14 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-    var fragment: Fragment? = HomeFragment()
+    var fragment: Fragment? = SkripsiFragment()
 
     private val onNavigationItemSelectedListener =
         BottomNavigationView.OnNavigationItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.navigation_home -> fragment = HomeFragment()
+                R.id.navigation_home -> fragment = SkripsiFragment()
                 R.id.navigation_account -> fragment = AccountFragment()
-                R.id.navigation_buku -> fragment = BukuFragment()
+                R.id.navigation_buku -> fragment = PeminjamanFragment()
             }
 
             supportFragmentManager.beginTransaction()
@@ -37,6 +38,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
+        supportActionBar?.displayOptions = ActionBar.DISPLAY_SHOW_CUSTOM
+        supportActionBar?.setCustomView(R.layout.custom_toolbar)
 
         val navigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
 

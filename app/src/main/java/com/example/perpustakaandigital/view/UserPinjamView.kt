@@ -1,13 +1,12 @@
 package com.example.perpustakaandigital.view
 
-import com.example.perpustakaandigital.model.PinjamResponse
+import com.example.perpustakaandigital.model.Response
 
 class UserPinjamView {
     interface View{
         fun showProgressBar()
         fun hideProgressBar()
-        fun onSuccess(pinjam: PinjamResponse)
-        fun onPinjam(message: String)
+        fun onSuccessPinjam(pinjam: Response)
         fun onFailure(message: String)
         fun noInternetConnection(message: String)
         fun handleError(t:Throwable?)

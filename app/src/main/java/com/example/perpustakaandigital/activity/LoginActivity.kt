@@ -12,7 +12,7 @@ import com.example.perpustakaandigital.network.DataSource
 import com.example.perpustakaandigital.network.NetworkError
 import com.example.perpustakaandigital.network.NetworkProvider
 import com.example.perpustakaandigital.presenter.LoginPresenter
-import com.example.perpustakaandigital.repository.MahasiswaImp
+import com.example.perpustakaandigital.repository.PerpusImp
 import com.example.perpustakaandigital.storage.SharedPrefManager
 import com.example.perpustakaandigital.utils.ConstantUtils.Companion.API_KEY
 import com.example.perpustakaandigital.utils.snackbar
@@ -34,7 +34,7 @@ class LoginActivity : AppCompatActivity(), LoginView.View {
         dataSource = NetworkProvider.getClient(this)
             ?.create(DataSource::class.java)
 
-        val repository = dataSource?.let { MahasiswaImp(it) }
+        val repository = dataSource?.let { PerpusImp(it) }
         presenter = LoginPresenter(this,repository)
 
         loginButton.setOnClickListener {

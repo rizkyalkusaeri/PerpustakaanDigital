@@ -7,14 +7,6 @@
     android:id="@+id/root_layout_detail"
     tools:context=".activity.DetailSkripsiActivity">
 
-    <include
-        android:id="@+id/progressbar_download"
-        android:visibility="gone"
-        layout="@layout/layout_progress_bar_download"/>
-    <include
-        android:id="@+id/progressbar_pinjam"
-        android:visibility="gone"
-        layout="@layout/layout_progress_bar_pinjam"/>
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar_layout"
@@ -51,7 +43,9 @@
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
+
     </com.google.android.material.appbar.AppBarLayout>
+
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh"
@@ -59,157 +53,278 @@
         android:layout_height="wrap_content"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fillViewport="true">
 
-            <LinearLayout
-                android:id="@+id/layout_data"
-                android:layout_marginTop="16dp"
-                android:layout_width="360dp"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_gravity="center">
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:paddingStart="25dp"
-                    android:layout_width="match_parent"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ProgressBar
+                    android:id="@+id/progressbar_download"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    tools:ignore="RtlSymmetry,UseCompoundDrawables">
-                    <ImageView
-                        android:layout_width="36dp"
-                        android:layout_height="36dp"
-                        android:layout_marginEnd="@dimen/margin_normal_size"
-                        android:src="@drawable/ic_library_books_black_24dp"
-                        android:contentDescription="@string/imagelogo" />
-                    <TextView
-                        android:id="@+id/tvDetailJudul"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/margin_normal_size"
-                        android:layout_marginEnd="@dimen/margin_normal_size"
-                        android:layout_marginTop="@dimen/margin_normal_size"
-                        android:text="@string/judul_skripsi"
-                        android:textColor="#000000"
-                        android:textSize="16sp"
-                        android:textStyle="bold"/>
-                </LinearLayout>
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.13">
+                </ProgressBar>
 
-                <LinearLayout
-                    android:layout_marginTop="25dp"
-                    android:orientation="horizontal"
-                    android:paddingStart="25dp"
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/txtprogressdownload"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    tools:ignore="RtlSymmetry,UseCompoundDrawables">
-                    <ImageView
-                        android:layout_width="36dp"
-                        android:layout_height="36dp"
-                        android:layout_marginEnd="@dimen/margin_normal_size"
-                        android:src="@drawable/ic_school_black_24dp"
-                        android:contentDescription="@string/imagelogo" />
-                    <TextView
-                        android:id="@+id/tvDetailNim"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/margin_normal_size"
-                        android:layout_marginTop="@dimen/margin_normal_size"
-                        android:layout_marginEnd="@dimen/margin_normal_size"
-                        android:text="@string/nim"
-                        android:textColor="#000000"
-                        android:textSize="16sp"
-                        android:textStyle="bold"/>
-                </LinearLayout>
+                    android:text="@string/melakukandownload"
+                    android:textColor="@color/colorPrimaryDark"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:visibility="gone"
+                    app:layout_constraintTop_toBottomOf="@+id/progressbar_pinjam"
+                    app:layout_constraintVertical_bias="0.060000002" />
 
-                <LinearLayout
-                    android:layout_marginTop="25dp"
-                    android:orientation="horizontal"
-                    android:paddingStart="25dp"
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/txtprogressPinjam"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    tools:ignore="RtlSymmetry,UseCompoundDrawables">
-                    <ImageView
-                        android:layout_width="36dp"
-                        android:layout_height="36dp"
-                        android:layout_marginEnd="@dimen/margin_normal_size"
-                        android:src="@drawable/ic_stars_black_24dp"
-                        android:contentDescription="@string/imagelogo" />
-                    <TextView
-                        android:id="@+id/tvDetailPenulis"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/margin_normal_size"
-                        android:layout_marginEnd="@dimen/margin_normal_size"
-                        android:layout_marginTop="@dimen/margin_small_size"
-                        android:text="@string/penulis"
-                        android:textColor="#000000"
-                        android:textSize="16sp"
-                        android:textStyle="bold"/>
-                </LinearLayout>
+                    android:text="@string/meminjam"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/progressbar_pinjam"
+                    app:layout_constraintVertical_bias="0.060000002" />
 
-                <LinearLayout
-                    android:layout_marginTop="25dp"
-                    android:orientation="horizontal"
-                    android:paddingStart="25dp"
-                    android:layout_width="match_parent"
+
+                <ProgressBar
+                    android:id="@+id/progressbar_pinjam"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    tools:ignore="RtlSymmetry,UseCompoundDrawables">
-                    <ImageView
-                        android:layout_width="36dp"
-                        android:layout_height="36dp"
-                        android:layout_marginEnd="@dimen/margin_normal_size"
-                        android:src="@drawable/ic_create_black_24dp"
-                        android:contentDescription="@string/imagelogo" />
-                    <TextView
-                        android:id="@+id/tvDetailKk"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="#000000"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:layout_marginStart="@dimen/margin_normal_size"
-                        android:layout_marginEnd="@dimen/margin_normal_size"
-                        android:layout_marginTop="@dimen/margin_small_size"
-                        android:text="@string/kelompok"/>
-                </LinearLayout>
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.13"
+                    android:visibility="gone" />
 
-                <LinearLayout
+                <View
+                    android:id="@+id/line_detail_one"
                     android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#FFC2C1C1"
+                    android:layout_marginTop="26dp"
+                    app:layout_constraintTop_toBottomOf="@+id/img_poster"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+                <TextView
+                    android:id="@+id/tv_overview"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="40dp"
-                    android:gravity="center">
+                    android:layout_marginStart="@dimen/margin_big_size"
+                    android:layout_marginEnd="@dimen/margin_big_size"
+                    android:layout_marginTop="@dimen/margin_normal_size"
+                    android:text="@string/judul_skripsi"
+                    android:textColor="#000000"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/line_detail_one"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:textAllCaps="true"/>
 
-                    <Button
-                        android:visibility="gone"
-                        android:id="@+id/btn_borrow"
-                        android:textColor="#fff"
-                        android:background="@drawable/buttonstyle"
-                        android:layout_marginTop="35dp"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="20dp"
-                        android:text="@string/Pinjam"
-                        tools:ignore="ButtonStyle" />
-                    <Button
-                        android:visibility="gone"
-                        android:id="@+id/btn_open"
-                        android:textColor="#fff"
-                        android:background="@drawable/buttonstyle"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/open"
-                        tools:ignore="ButtonStyle" />
+                <TextView
+                    android:id="@+id/tvDetailJudul"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_normal_size"
+                    android:layout_marginEnd="@dimen/margin_big_size"
+                    android:layout_marginStart="@dimen/margin_big_size"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="16sp"
+                    android:text="@string/judul_skripsi"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_overview"/>
 
-                </LinearLayout>
+                <View
+                    android:id="@+id/line_two"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#FFC2C1C1"
+                    android:layout_marginTop="16dp"
+                    app:layout_constraintTop_toBottomOf="@+id/tvDetailJudul"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
 
-            </LinearLayout>
+                <TextView
+                    android:id="@+id/tvViewlHal"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_normal_size"
+                    android:layout_marginEnd="@dimen/margin_big_size"
+                    android:layout_marginStart="@dimen/margin_big_size"
+                    android:textStyle="bold"
+                    android:textColor="#000000"
+                    android:textSize="16sp"
+                    android:textAllCaps="true"
+                    android:text="@string/halaman"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/line_two"/>
+
+                <TextView
+                    android:id="@+id/tvDetailHal"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_normal_size"
+                    android:layout_marginEnd="@dimen/margin_big_size"
+                    android:layout_marginStart="@dimen/margin_big_size"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="16sp"
+                    android:text="@string/halaman"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tvViewlHal"/>
+
+                <View
+                    android:id="@+id/line_three"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#FFC2C1C1"
+                    android:layout_marginTop="16dp"
+                    app:layout_constraintTop_toBottomOf="@+id/tvDetailHal"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+                <TextView
+                    android:id="@+id/tvViewPenulis"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_normal_size"
+                    android:layout_marginEnd="@dimen/margin_big_size"
+                    android:layout_marginStart="@dimen/margin_big_size"
+                    android:textStyle="bold"
+                    android:textColor="#000000"
+                    android:textSize="16sp"
+                    android:textAllCaps="true"
+                    android:text="@string/penulis"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/line_three"/>
+
+                <TextView
+                    android:id="@+id/tvDetailPenulis"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_normal_size"
+                    android:layout_marginEnd="@dimen/margin_big_size"
+                    android:layout_marginStart="@dimen/margin_big_size"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="16sp"
+                    android:text="@string/penulis"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tvViewPenulis"/>
+
+                <View
+                    android:id="@+id/line_four"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#FFC2C1C1"
+                    android:layout_marginTop="16dp"
+                    app:layout_constraintTop_toBottomOf="@+id/tvDetailHal"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+                <View
+                    android:id="@+id/line_five"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#FFC2C1C1"
+                    android:layout_marginTop="16dp"
+                    app:layout_constraintTop_toBottomOf="@+id/tvDetailPenulis"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+                <TextView
+                    android:id="@+id/tvViewKk"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_normal_size"
+                    android:layout_marginEnd="@dimen/margin_big_size"
+                    android:layout_marginStart="@dimen/margin_big_size"
+                    android:textStyle="bold"
+                    android:textColor="#000000"
+                    android:textSize="16sp"
+                    android:textAllCaps="true"
+                    android:text="@string/kelompok"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/line_five"/>
+
+                <TextView
+                    android:id="@+id/tvDetailKk"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_normal_size"
+                    android:layout_marginEnd="@dimen/margin_big_size"
+                    android:layout_marginStart="@dimen/margin_big_size"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="16sp"
+                    android:text="@string/kelompok"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tvViewKk"/>
+
+                <View
+                    android:id="@+id/line_six"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#FFC2C1C1"
+                    android:layout_marginTop="16dp"
+                    app:layout_constraintTop_toBottomOf="@+id/tvDetailKk"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+                <Button
+                    android:id="@+id/btn_borrow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/buttonstyle"
+                    android:text="@string/pinjam"
+                    android:textColor="#fff"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/line_six"
+                    tools:ignore="ButtonStyle" />
+
+                <Button
+                    android:id="@+id/btn_open"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/buttonstyle"
+                    android:text="@string/open"
+                    android:textColor="#fff"
+                    android:visibility="visible"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/line_six"
+                    tools:ignore="ButtonStyle" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
 
         </androidx.core.widget.NestedScrollView>
-
 
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

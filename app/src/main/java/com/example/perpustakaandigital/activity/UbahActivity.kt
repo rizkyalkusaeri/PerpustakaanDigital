@@ -8,13 +8,13 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.example.perpustakaandigital.R
 import com.example.perpustakaandigital.model.Login
-import com.example.perpustakaandigital.model.UbahPasswordResponse
+import com.example.perpustakaandigital.model.Response
 import com.example.perpustakaandigital.network.ConnectivityStatus
 import com.example.perpustakaandigital.network.DataSource
 import com.example.perpustakaandigital.network.NetworkError
 import com.example.perpustakaandigital.network.NetworkProvider
 import com.example.perpustakaandigital.presenter.UbahPasswordPresenter
-import com.example.perpustakaandigital.repository.MahasiswaImp
+import com.example.perpustakaandigital.repository.PerpusImp
 import com.example.perpustakaandigital.storage.SharedPrefManager
 import com.example.perpustakaandigital.utils.ConstantUtils.Companion.API_KEY
 import com.example.perpustakaandigital.utils.snackbar
@@ -45,7 +45,7 @@ class UbahActivity : AppCompatActivity(),UbahPasswordView.View {
 
         dataSource = NetworkProvider.getClient(this)?.create(DataSource::class.java)
 
-        val repository = dataSource?.let { MahasiswaImp(it) }
+        val repository = dataSource?.let { PerpusImp(it) }
 
         presenter = UbahPasswordPresenter(this,repository)
 
@@ -94,18 +94,13 @@ class UbahActivity : AppCompatActivity(),UbahPasswordView.View {
         pb_ubah.visibility = View.GONE
     }
 
-    override fun onSuccess(ubah: UbahPasswordResponse) {
+    override fun onSuccess(ubah: Response) {
         AlertDialog.Builder(this)
-            .setTitle("Password Berhasil Dirubah !")
+            .setTitle(ubah.message)
             .setMessage("Silahkan Untuk Melakukan Login Kembali")
             .setPositiveButton("Oke") { _, _ ->
                 SharedPrefManager.getInstance(this).clear()
                 val intent = Intent(this, LoginActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                startActivity(intent)
-            }
-            .setNegativeButton("Batalkan") { _, _ ->
-                val intent = Intent(this, MainActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(intent)
             }.show()
@@ -143,4 +138,6 @@ class UbahActivity : AppCompatActivity(),UbahPasswordView.View {
         onBackPressed()
         return true
     }
+
+
 }

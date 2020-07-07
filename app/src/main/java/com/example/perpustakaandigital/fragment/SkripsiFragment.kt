@@ -2,10 +2,9 @@
 
 package com.example.perpustakaandigital.fragment
 
+import android.annotation.SuppressLint
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -14,47 +13,38 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.perpustakaandigital.R
-import com.example.perpustakaandigital.adapter.BukuAdapter
-import com.example.perpustakaandigital.model.BukuResponse
-import com.example.perpustakaandigital.model.DataBuku
+import com.example.perpustakaandigital.adapter.SkripsiAdapter
+import com.example.perpustakaandigital.model.Data
+import com.example.perpustakaandigital.model.SkripsiResponse
 import com.example.perpustakaandigital.network.ConnectivityStatus
 import com.example.perpustakaandigital.network.DataSource
 import com.example.perpustakaandigital.network.NetworkError
 import com.example.perpustakaandigital.network.NetworkProvider
-import com.example.perpustakaandigital.repository.MahasiswaImp
+import com.example.perpustakaandigital.repository.PerpusImp
 import com.example.perpustakaandigital.utils.ConstantUtils.Companion.API_KEY
 import com.example.perpustakaandigital.utils.ConstantUtils.Companion.STATE_SAVED
-import com.example.perpustakaandigital.view.BukuView
-import com.example.perpustakaandigital.viewmodel.BukuViewModel
+import com.example.perpustakaandigital.view.SkripsiView
+import com.example.perpustakaandigital.viewmodel.SkripsiViewModel
 import retrofit2.HttpException
 import java.net.SocketTimeoutException
 import kotlin.properties.Delegates
 
-/**
- * A simple [Fragment] subclass.
- */
-@Suppress("DEPRECATION")
-class BukuFragment : Fragment(), BukuView.View {
+
+class SkripsiFragment : Fragment(), SkripsiView.View {
 
     private lateinit var mLayoutManager: RecyclerView.LayoutManager
-    private lateinit var bukuViewModel: BukuViewModel
-
+    private lateinit var skripsiViewModel: SkripsiViewModel
     private var dataSource: DataSource? = null
-    private var adapter by Delegates.notNull<BukuAdapter>()
-
-    private var page : Int = 1
-
+    private var adapter by Delegates.notNull<SkripsiAdapter>()
+    private var page: Int = 1
     private var totalPage: Int? = null
     private var isLoading = false
     private lateinit var swipeRefresh: SwipeRefreshLayout
     private lateinit var recyclerView: RecyclerView
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_buku, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+                              savedInstanceState: Bundle?): View? { // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_skripsi, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -64,24 +54,25 @@ class BukuFragment : Fragment(), BukuView.View {
         scrollListener()
 
         if (savedInstanceState == null){
-            showListBuku()
+            showListSkripsi()
         }
 
         swipeRefresh.setOnRefreshListener {
-            showListBuku()
+            showListSkripsi()
         }
     }
 
     override fun onResume() {
         super.onResume()
-        showListBuku()
+        showListSkripsi()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putString(STATE_SAVED,"saved")
+        outState.putString(STATE_SAVED, "saved")
     }
-    override fun getBukuData(data: BukuResponse) {
+
+    override fun getSkripsiData(data: SkripsiResponse) {
         totalPage = data.totalPages
     }
 
@@ -112,14 +103,16 @@ class BukuFragment : Fragment(), BukuView.View {
         }
     }
 
+    @SuppressLint("FragmentLiveDataObserve")
     private fun prepare(view: View){
-        recyclerView = view.findViewById(R.id.rv_buku)
-        swipeRefresh = view.findViewById(R.id.swipe_refresh_buku)
 
-        bukuViewModel = ViewModelProviders.of(this).get(BukuViewModel::class.java)
-        bukuViewModel.getDataBuku().observe(viewLifecycleOwner, getDataBuku)
+        recyclerView = view.findViewById(R.id.rv_home)
+        swipeRefresh = view.findViewById(R.id.swipe_refresh)
 
-        adapter = BukuAdapter(this.requireActivity())
+        skripsiViewModel = ViewModelProviders.of(this).get(SkripsiViewModel::class.java)
+        skripsiViewModel.getDataSkripsi().observe(viewLifecycleOwner, getData)
+
+        adapter = SkripsiAdapter(this.requireActivity())
         adapter.notifyDataSetChanged()
 
         recyclerView.setHasFixedSize(true)
@@ -127,24 +120,26 @@ class BukuFragment : Fragment(), BukuView.View {
         recyclerView.layoutManager = mLayoutManager
 
         dataSource = NetworkProvider.getClient(view.context)
-            ?.create(DataSource::class.java)
+                ?.create(DataSource::class.java)
 
         recyclerView.adapter = adapter
+
     }
 
-    private val getDataBuku = Observer<ArrayList<DataBuku>>{ dataBuku ->
-        adapter.setDataBuku(dataBuku)
-    }
+    private val getData =
+            Observer<ArrayList<Data>> { datamahasiswa->
+                adapter.setData(datamahasiswa)
+            }
 
-    private fun showListBuku(){
-        val repository = dataSource?.let { MahasiswaImp(it) }
+    private fun showListSkripsi(){
+        val repository = dataSource?.let { PerpusImp(it) }
         if (repository != null){
-            bukuViewModel.setDataBuku(API_KEY, view = this ,page = page ,buku = repository)
+            skripsiViewModel.setDataSkripsi(API_KEY, view = this,page = page, perpus = repository)
         }
     }
 
-    private fun scrollListener(){
-        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener(){
+    private fun scrollListener() {
+        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 val linearLayoutManager = recyclerView.layoutManager as LinearLayoutManager
                 val countItem = linearLayoutManager.itemCount
@@ -152,7 +147,7 @@ class BukuFragment : Fragment(), BukuView.View {
                 val isLastPosition = countItem.minus(1) == lastVisiblePosition
                 if (!isLoading && isLastPosition && page != totalPage) {
                     page = page.plus(1)
-                    showListBuku()
+                    showListSkripsi()
                 }
             }
         })

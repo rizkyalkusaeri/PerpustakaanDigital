@@ -1,7 +1,7 @@
 package com.example.perpustakaandigital.presenter
 
-import com.example.perpustakaandigital.model.UbahPasswordResponse
-import com.example.perpustakaandigital.repository.MahasiswaImp
+import com.example.perpustakaandigital.model.Response
+import com.example.perpustakaandigital.repository.PerpusImp
 import com.example.perpustakaandigital.view.UbahPasswordView
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -10,7 +10,7 @@ import io.reactivex.subscribers.ResourceSubscriber
 
 class UbahPasswordPresenter(
     private val view: UbahPasswordView.View,
-    private val ubah: MahasiswaImp?
+    private val ubah: PerpusImp?
 ): UbahPasswordView.Presenter {
 
     private val compositeDisposables = CompositeDisposable()
@@ -28,12 +28,12 @@ class UbahPasswordPresenter(
             ubah?.getDataUbahPassword(apiKey, id_anggota, password)
                 ?.observeOn(AndroidSchedulers.mainThread())
                 ?.subscribeOn(Schedulers.io())
-                ?.subscribeWith(object : ResourceSubscriber<UbahPasswordResponse>() {
+                ?.subscribeWith(object : ResourceSubscriber<Response>() {
                     override fun onComplete() {
                         view.hideProgressBar()
                     }
 
-                    override fun onNext(t: UbahPasswordResponse?) {
+                    override fun onNext(t: Response?) {
                         if (!t?.status!!) {
                             view.onFailure(t.message)
                         } else {

@@ -4,39 +4,39 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.perpustakaandigital.model.Data
-import com.example.perpustakaandigital.model.HomeResponse
-import com.example.perpustakaandigital.repository.MahasiswaImp
-import com.example.perpustakaandigital.view.HomeView
+import com.example.perpustakaandigital.model.SkripsiResponse
+import com.example.perpustakaandigital.repository.PerpusImp
+import com.example.perpustakaandigital.view.SkripsiView
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subscribers.ResourceSubscriber
 
-class SkripsiViewModel : ViewModel(), HomeView.ViewModel {
+class SkripsiViewModel : ViewModel(), SkripsiView.ViewModel {
 
-    private val listMahasiswa = MutableLiveData<ArrayList<Data>>()
+    private val listSkripsi = MutableLiveData<ArrayList<Data>>()
 
     private val disposables = CompositeDisposable()
-    fun getDataMahasiswa(): LiveData<ArrayList<Data>>{
-        return listMahasiswa
+    fun getDataSkripsi(): LiveData<ArrayList<Data>>{
+        return listSkripsi
     }
 
-    override fun setDataMahasiswa(apiKey: String,page:Int, view: HomeView.View, mahasiswa: MahasiswaImp) {
+    override fun setDataSkripsi(apiKey: String, page:Int, view: SkripsiView.View, perpus: PerpusImp) {
         view.showProgressBar()
 
         disposables.add(
-            mahasiswa.getDataMahasiswa(apiKey,page)
+            perpus.getDataSkripsi(apiKey,page)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.io())
-                    .subscribeWith(object : ResourceSubscriber<HomeResponse>() {
+                    .subscribeWith(object : ResourceSubscriber<SkripsiResponse>() {
                         override fun onComplete() {
                             view.hideProgressBar()
                         }
 
-                        override fun onNext(t: HomeResponse?) {
+                        override fun onNext(t: SkripsiResponse?) {
                             t?.let {
-                                view.getMahasiswaData(it) }
-                            listMahasiswa.postValue(t?.data)
+                                view.getSkripsiData(it) }
+                            listSkripsi.postValue(t?.data)
                         }
 
                         override fun onError(t: Throwable?) {

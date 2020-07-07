@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-data class HomeResponse(
+data class SkripsiResponse(
 
         @SerializedName("page")
         @Expose
@@ -15,6 +15,14 @@ data class HomeResponse(
         @SerializedName("total_page")
         @Expose
         val totalPages: Int? = null,
+
+        @SerializedName("status")
+        @Expose
+        val status: Boolean? = null,
+
+        @SerializedName("message")
+        @Expose
+        val message: String? = null,
 
         @SerializedName("data")
         @Expose
@@ -36,17 +44,28 @@ data class Data(
         @Expose
         val penulis : String? = null,
 
+        @SerializedName("id_penulis")
+        @Expose
+        val id_penulis : String? = null,
+
         @SerializedName("judul_skripsi")
         @Expose
         val judul_skripsi : String? = null,
 
         @SerializedName("kelompok_keilmuan")
+        @Expose
         val kelompok_keilmuan : String? = null,
 
         @SerializedName("file_pdf")
+        @Expose
         val file_pdf : String? = null,
 
-       @SerializedName("pass_pdf")
-       val pass_pdf : String? = null
+        @SerializedName("pass_pdf")
+        @Expose
+        val pass_pdf : String? = null,
+
+        @SerializedName("halaman")
+        @Expose
+        val halaman : String? = null
 ):Parcelable
 

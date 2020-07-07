@@ -4,34 +4,35 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.view.WindowManager
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.downloader.Error
 import com.downloader.OnDownloadListener
 import com.downloader.PRDownloader
+import com.downloader.PRDownloaderConfig
 import com.example.perpustakaandigital.R
-import com.example.perpustakaandigital.activity.pdf.PdfActivity
 import com.example.perpustakaandigital.database.AppDatabase
 import com.example.perpustakaandigital.model.Data
 import com.example.perpustakaandigital.model.Login
-import com.example.perpustakaandigital.model.PinjamResponse
+import com.example.perpustakaandigital.model.Response
 import com.example.perpustakaandigital.network.ConnectivityStatus
 import com.example.perpustakaandigital.network.DataSource
 import com.example.perpustakaandigital.network.NetworkError
 import com.example.perpustakaandigital.network.NetworkProvider
 import com.example.perpustakaandigital.presenter.UserPinjamPresenter
-import com.example.perpustakaandigital.repository.MahasiswaImp
+import com.example.perpustakaandigital.repository.PerpusImp
 import com.example.perpustakaandigital.storage.SharedPrefManager
 import com.example.perpustakaandigital.utils.ConstantUtils.Companion.API_KEY
 import com.example.perpustakaandigital.utils.ConstantUtils.Companion.MAHASISWA_EXTRA
 import com.example.perpustakaandigital.utils.ConstantUtils.Companion.PDF_URL
 import com.example.perpustakaandigital.utils.ConstantUtils.Companion.SAVE_FILE
+import com.example.perpustakaandigital.utils.ConstantUtils.Companion.SAVE_HALAMAN
 import com.example.perpustakaandigital.utils.ConstantUtils.Companion.SAVE_JUDUL
 import com.example.perpustakaandigital.utils.ConstantUtils.Companion.SAVE_KEILMUAN
-import com.example.perpustakaandigital.utils.ConstantUtils.Companion.SAVE_NIM
 import com.example.perpustakaandigital.utils.ConstantUtils.Companion.SAVE_PASS
 import com.example.perpustakaandigital.utils.ConstantUtils.Companion.SAVE_PENULIS
-import com.example.perpustakaandigital.utils.DateFormat
 import com.example.perpustakaandigital.utils.FileUtils
 import com.example.perpustakaandigital.utils.snackbar
 import com.example.perpustakaandigital.view.UserPinjamView
@@ -47,7 +48,7 @@ import java.util.*
 class DetailSkripsiActivity : AppCompatActivity(), UserPinjamView.View {
 
     private lateinit var data : ArrayList<Data>
-    private lateinit var presenter: UserPinjamView.Presenter
+    private lateinit var presenterPinjam: UserPinjamView.Presenter
     private var dataSource : DataSource? = null
 
     private lateinit var login : Login
@@ -56,8 +57,9 @@ class DetailSkripsiActivity : AppCompatActivity(), UserPinjamView.View {
 
 
     var id_skripsi: String? = null
+    var id_penulis: String? = null
     var judul_skripsi: String? = null
-    var nim_penulis: String?= null
+    var halaman: String?= null
     var penulis: String?= null
     var kelompok_keilmuan: String? = null
     var file_pdf: String? = null
@@ -82,6 +84,8 @@ class DetailSkripsiActivity : AppCompatActivity(), UserPinjamView.View {
             val intent = Intent(this, PdfActivity::class.java)
             intent.putExtra("filename",file_pdf)
             intent.putExtra("password",pass_pdf)
+            intent.putExtra("halaman",halaman)
+            intent.putExtra("dirName",id_penulis)
             startActivity(intent)
         }
 
@@ -99,7 +103,7 @@ class DetailSkripsiActivity : AppCompatActivity(), UserPinjamView.View {
             val tanggalPinjam = date.format(today)
             val tanggalPengembalian = date.format(tomorrow)
 
-            presenter.onPinjamButtonClick(API_KEY,idSkripsi,idAnggota,tanggalPinjam,tanggalPengembalian)
+            presenterPinjam.onPinjamButtonClick(API_KEY,idSkripsi,idAnggota,tanggalPinjam,tanggalPengembalian)
         }
 
     }
@@ -107,18 +111,28 @@ class DetailSkripsiActivity : AppCompatActivity(), UserPinjamView.View {
     private fun downloadPdf(url: String, dirPath: String, fileName: String){
         PRDownloader.download(url,dirPath,fileName)
             .build()
+            .setOnProgressListener {
+                val progressPercent : Long = it.currentBytes * 100 / it.totalBytes
+                progressbar_download.visibility = View.VISIBLE
+                progressbar_download.progress = progressPercent.toInt()
+                txtprogressdownload.visibility = View.VISIBLE
+                btn_borrow.isEnabled = false
+                window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+
+            }
             .start(object : OnDownloadListener {
                 override fun onDownloadComplete() {
-                    progressbar_download.visibility = View.GONE
-                    Toast.makeText(this@DetailSkripsiActivity, "Download Selesai", Toast.LENGTH_LONG).show()
-                    btn_borrow.visibility = View.GONE
-                    btn_open.visibility = View.VISIBLE
+                    btn_borrow.isEnabled = false
+                    txtprogressdownload.visibility = View.GONE
                 }
+
 
                 override fun onError(error: Error?) {
                     Toast.makeText(this@DetailSkripsiActivity, "Error in downloading file : $error",
                         Toast.LENGTH_LONG)
                         .show()
+
+                    progressbar_download.progress = 0
                 }
 
             })
@@ -127,42 +141,79 @@ class DetailSkripsiActivity : AppCompatActivity(), UserPinjamView.View {
     private fun downloadThumbnail(url: String, dirPath: String, fileName: String){
         PRDownloader.download(url,dirPath,fileName)
             .build()
+            .setOnProgressListener {
+                btn_borrow.isEnabled = false
+                val progressPercent : Long = it.currentBytes * 100 / it.totalBytes
+                progressbar_download.visibility = View.VISIBLE
+                progressbar_download.progress = progressPercent.toInt()
+                txtprogressdownload.visibility = View.VISIBLE
+                txtprogressdownload.text = getProgressDisplayLine(it.currentBytes, it.totalBytes)
+                window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+
+            }
             .start(object : OnDownloadListener {
                 override fun onDownloadComplete() {
-                    progressbar_download.visibility = View.GONE
-                    Toast.makeText(this@DetailSkripsiActivity, "Download Selesai", Toast.LENGTH_LONG).show()
-                    btn_borrow.visibility = View.GONE
-                    btn_open.visibility = View.VISIBLE
+                    txtprogressdownload.visibility = View.GONE
+                    window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
                 }
 
                 override fun onError(error: Error?) {
                     Toast.makeText(this@DetailSkripsiActivity, "Error in downloading file : $error",
                         Toast.LENGTH_LONG)
                         .show()
+                    progressbar_download.progress = 0
                 }
 
             })
     }
 
+    private fun downloadComplete(){
+        root_layout_detail.snackbar("Download telah selesai")
+        progressbar_download.visibility = View.GONE
+        txtprogressdownload.visibility = View.GONE
+        btn_borrow.visibility = View.GONE
+        btn_open.visibility = View.VISIBLE
+    }
+
+    private fun thumbnailDownload(){
+        val thumbnailExt = ".jpg"
+        val thumbnail = "/thumbnail/"
+        val totalHalaman = data[position].halaman!!.toInt()
+        val directoryName = data[position].id_penulis.toString()
+
+        for(i in 1..totalHalaman){
+            downloadThumbnail(
+                PDF_URL+ directoryName + thumbnail + i + thumbnailExt,
+                FileUtils.getRootDirPath(this) + File.separator + directoryName,
+                i.toString() + thumbnailExt
+            )
+        }
+
+        downloadComplete()
+
+    }
+
     private fun pdfAction(){
-        progressbar_download.visibility = View.VISIBLE
-        val thumbnailName = "thumb.jpg"
+        val pdf = "/pdf/"
         val fileName = file_pdf
+        val directoryName = data[position].id_penulis.toString()
+        val dirThumbnail = File(FileUtils.getRootDirPath(this) + File.separator + directoryName)
+
         if (fileName != null) {
             downloadPdf(
-                PDF_URL + file_pdf,
+                PDF_URL + directoryName + pdf + file_pdf,
                 FileUtils.getRootDirPath(this),
                 fileName
             )
-
-            downloadThumbnail(
-                PDF_URL , // + id_anggota + thumbnail
-                FileUtils.getRootDirPath(this),
-                thumbnailName
-
-            )
-
         }
+
+        if(!dirThumbnail.exists()){
+            dirThumbnail.mkdirs()
+            thumbnailDownload()
+        } else {
+            thumbnailDownload()
+        }
+
     }
 
 
@@ -170,8 +221,9 @@ class DetailSkripsiActivity : AppCompatActivity(), UserPinjamView.View {
 
         id_skripsi = data[position].id.toString()
         judul_skripsi = data[position].judul_skripsi.toString()
-        nim_penulis = data[position].nim_penulis.toString()
+        halaman = data[position].halaman.toString()
         penulis = data[position].penulis.toString()
+        id_penulis = data[position].id_penulis.toString()
         kelompok_keilmuan = data[position].kelompok_keilmuan.toString()
         file_pdf = data[position].file_pdf.toString()
         pass_pdf = data[position].pass_pdf.toString()
@@ -182,10 +234,9 @@ class DetailSkripsiActivity : AppCompatActivity(), UserPinjamView.View {
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
-        layout_data.visibility = View.VISIBLE
 
         judul_skripsi = savedInstanceState.getString(SAVE_JUDUL)
-        nim_penulis = savedInstanceState.getString(SAVE_NIM)
+        halaman = savedInstanceState.getString(SAVE_HALAMAN)
         penulis = savedInstanceState.getString(SAVE_PENULIS)
         kelompok_keilmuan = savedInstanceState.getString(SAVE_KEILMUAN)
         file_pdf = savedInstanceState.getString(SAVE_FILE)
@@ -198,7 +249,7 @@ class DetailSkripsiActivity : AppCompatActivity(), UserPinjamView.View {
         super.onSaveInstanceState(outState)
 
         outState.putString(SAVE_JUDUL,judul_skripsi)
-        outState.putString(SAVE_NIM,nim_penulis)
+        outState.putString(SAVE_HALAMAN,halaman)
         outState.putString(SAVE_PENULIS,penulis)
         outState.putString(SAVE_KEILMUAN,kelompok_keilmuan)
         outState.putString(SAVE_FILE,file_pdf)
@@ -212,14 +263,17 @@ class DetailSkripsiActivity : AppCompatActivity(), UserPinjamView.View {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowTitleEnabled(false)
 
-        PRDownloader.initialize(applicationContext)
+        val config = PRDownloaderConfig.newBuilder()
+            .setDatabaseEnabled(true)
+            .build()
+        PRDownloader.initialize(this, config)
 
         login = SharedPrefManager.getInstance(this).login
         dataSource = NetworkProvider.getClient(this)?.create(DataSource::class.java)
 
-        val repository = dataSource?.let { MahasiswaImp(it) }
+        val repository = dataSource?.let { PerpusImp(it) }
 
-        presenter = UserPinjamPresenter(this,repository)
+        presenterPinjam = UserPinjamPresenter(this,repository)
 
         data = intent.getParcelableArrayListExtra(MAHASISWA_EXTRA)
         position = intent.getIntExtra("position",-1)
@@ -233,7 +287,7 @@ class DetailSkripsiActivity : AppCompatActivity(), UserPinjamView.View {
     }
     private fun getDetailMahasiswa(){
         tvDetailJudul.text = judul_skripsi
-        tvDetailNim.text = nim_penulis
+        tvDetailHal.text = halaman
         tvDetailPenulis.text = penulis
         tvDetailKk.text = kelompok_keilmuan
     }
@@ -267,14 +321,11 @@ class DetailSkripsiActivity : AppCompatActivity(), UserPinjamView.View {
         progressbar_pinjam.visibility = View.GONE
     }
 
-    override fun onSuccess(pinjam: PinjamResponse) {
+    override fun onSuccessPinjam(pinjam: Response) {
+        Toast.makeText(this, pinjam.message, Toast.LENGTH_LONG).show()
         pdfAction()
     }
 
-    override fun onPinjam(message: String) {
-        progressbar_pinjam.visibility = View.GONE
-        root_layout_detail.snackbar(message)
-    }
 
     override fun onFailure(message: String) {
         progressbar_pinjam.visibility = View.GONE
@@ -296,6 +347,17 @@ class DetailSkripsiActivity : AppCompatActivity(), UserPinjamView.View {
         } else {
             Toast.makeText(this, resources.getString(R.string.no_internet), Toast.LENGTH_SHORT).show()
         }
+    }
+
+    fun getProgressDisplayLine(
+        currentBytes: Long,
+        totalBytes: Long
+    ): String? {
+        return getBytesToMBString(currentBytes) + "/" + getBytesToMBString(totalBytes)
+    }
+
+    private fun getBytesToMBString(bytes: Long): String {
+        return java.lang.String.format(Locale.ENGLISH, "%.2fMb", bytes / (1024.00 * 1024.00))
     }
 
 }

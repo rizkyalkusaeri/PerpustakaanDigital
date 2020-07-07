@@ -5,13 +5,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import com.example.perpustakaandigital.R
 import com.example.perpustakaandigital.activity.LoginActivity
+import com.example.perpustakaandigital.activity.UbahActivity
 import com.example.perpustakaandigital.model.Login
 import com.example.perpustakaandigital.storage.SharedPrefManager
 import kotlinx.android.synthetic.main.fragment_account.*
-import com.example.perpustakaandigital.R
-import com.example.perpustakaandigital.activity.UbahActivity
 
 
 /**
@@ -48,10 +49,21 @@ class AccountFragment : Fragment() {
     }
 
     private fun logout(){
-        SharedPrefManager.getInstance(activity!!).clear()
-        val intent = Intent(activity, LoginActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        startActivity(intent)
+
+        activity?.let {
+            AlertDialog.Builder(it)
+                .setTitle("Peringatan!")
+                .setMessage("Silahkan Untuk Melakukan Login Kembali")
+                .setPositiveButton("Oke") { _, _ ->
+                    SharedPrefManager.getInstance(activity!!).clear()
+                    val intent = Intent(activity, LoginActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    startActivity(intent)
+                }
+                .setNegativeButton("Batalkan") { dialog, _ ->
+                    dialog.cancel()
+                }.show()
+        }
     }
 
 }

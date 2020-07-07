@@ -3,10 +3,12 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/swipe_refresh_device"
+    android:id="@+id/swipe_refresh_peminjaman"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.PinjamActivity">
+    tools:context=".fragment.PeminjamanFragment">
+
+
 
     <androidx.constraintlayout.widget.ConstraintLayout
 
@@ -15,6 +17,7 @@
 
         <!-- TODO: Update blank fragment layout -->
 
+
         <TextView
             android:id="@+id/tv_no_data"
             android:text="@string/kosong"
@@ -22,7 +25,7 @@
             android:layout_height="wrap_content"
             android:textStyle="bold"
             android:textSize="15sp"
-            android:visibility="gone"
+            android:visibility="visible"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -34,7 +37,7 @@
             android:layout_height="match_parent"
             android:scrollbars="vertical"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/item_home"/>
+            tools:listitem="@layout/item_pinjam"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

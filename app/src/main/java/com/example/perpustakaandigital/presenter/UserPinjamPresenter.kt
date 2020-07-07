@@ -1,7 +1,7 @@
 package com.example.perpustakaandigital.presenter
 
-import com.example.perpustakaandigital.model.PinjamResponse
-import com.example.perpustakaandigital.repository.MahasiswaImp
+import com.example.perpustakaandigital.model.Response
+import com.example.perpustakaandigital.repository.PerpusImp
 import com.example.perpustakaandigital.view.UserPinjamView
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -10,7 +10,7 @@ import io.reactivex.subscribers.ResourceSubscriber
 
 class UserPinjamPresenter(
     private val view : UserPinjamView.View,
-    private val pinjam : MahasiswaImp?
+    private val pinjam : PerpusImp?
 ): UserPinjamView.Presenter {
 
     private val disposables = CompositeDisposable()
@@ -27,17 +27,16 @@ class UserPinjamPresenter(
         pinjam?.postPinjam(apiKey,id_skripsi,id_anggota,tanggal_pinjam,tanggal_pengembalian)
             ?.observeOn(AndroidSchedulers.mainThread())
             ?.subscribeOn(Schedulers.io())
-            ?.subscribeWith(object : ResourceSubscriber<PinjamResponse>() {
+            ?.subscribeWith(object : ResourceSubscriber<Response>() {
                 override fun onComplete() {
                     view.hideProgressBar()
                 }
 
-                override fun onNext(t: PinjamResponse?) {
+                override fun onNext(t: Response?) {
                     if (!t?.status!!) {
                         view.onFailure(t.message)
                     } else {
-                        t.let { view.onSuccess(it) }
-                        view.onPinjam(t.message)
+                        t.let { view.onSuccessPinjam(it) }
                     }
                 }
 

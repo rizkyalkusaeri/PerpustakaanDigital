@@ -1,4 +1,4 @@
-package com.example.perpustakaandigital.activity.pdf
+package com.example.perpustakaandigital.activity
 
 import android.os.Bundle
 import android.util.Log
@@ -13,7 +13,6 @@ import com.example.perpustakaandigital.utils.FileUtils
 import com.example.perpustakaandigital.view.ThumbnailView
 import com.github.barteksc.pdfviewer.util.FitPolicy
 import kotlinx.android.synthetic.main.activity_pdf.*
-import kotlinx.android.synthetic.main.activity_ubah.*
 import java.io.File
 import kotlin.properties.Delegates
 
@@ -27,6 +26,8 @@ class PdfActivity : AppCompatActivity(), ThumbnailView {
 
     private var fileNameIntent: String? = null
     private var passwordIntent: String? = null
+    private var halamanIntent: String? = null
+    private var dirNameIntent: String? = null
     private var onClick : Boolean = true
 
 
@@ -106,6 +107,8 @@ class PdfActivity : AppCompatActivity(), ThumbnailView {
 
         fileNameIntent = intent.getStringExtra("filename")
         passwordIntent = intent.getStringExtra("password")
+        halamanIntent = intent.getStringExtra("halaman")
+        dirNameIntent = intent.getStringExtra("dirName")
 
         recyclerView = findViewById(R.id.rv_thumbs)
         recyclerView.visibility = View.GONE
@@ -114,8 +117,8 @@ class PdfActivity : AppCompatActivity(), ThumbnailView {
     private fun getImageFromDevice(): ArrayList<File> {
         val tempImageList: ArrayList<File> = ArrayList()
 
-        for (i in 1..6) {
-            val file = File(FileUtils.getRootDirPath(this) + "/thumbs/$i.jpg")
+        for (i in 1..halamanIntent!!.toInt()) {
+            val file = File(FileUtils.getRootDirPath(this) + "/$dirNameIntent/$i.jpg")
             tempImageList.add(file)
         }
 
@@ -125,7 +128,7 @@ class PdfActivity : AppCompatActivity(), ThumbnailView {
     private fun getPageFromDevice(): ArrayList<String> {
         val tempPageList: ArrayList<String> = ArrayList()
 
-        for (i in 1..6) {
+        for (i in 1..halamanIntent!!.toInt()) {
             tempPageList.add(i.toString())
         }
 
