@@ -75,7 +75,7 @@ class UbahActivity : AppCompatActivity(),UbahPasswordView.View {
                 editTextPasswordBaru.requestFocus()
                 editTextPasswordBaru.error = "Password Tidak Boleh Sama"
             }
-            passwordLama == compare -> {
+            passwordLama != compare -> {
                 editTextPasswordLama.requestFocus()
                 editTextPasswordLama.error = "Password lama anda salah"
             }

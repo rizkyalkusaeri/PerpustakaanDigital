@@ -16,7 +16,7 @@ class LoginView {
     interface Presenter{
         fun onLoginButtonClick(
             apiKey: String,
-            email: String,
+            nim: String,
             password: String
         )
 

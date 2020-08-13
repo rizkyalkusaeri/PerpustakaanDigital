@@ -5,6 +5,7 @@ package com.example.perpustakaandigital.fragment
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.*
+import android.widget.SearchView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -152,5 +153,6 @@ class SkripsiFragment : Fragment(), SkripsiView.View {
             }
         })
     }
+
 
 }

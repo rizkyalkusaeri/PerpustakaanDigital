@@ -9,8 +9,13 @@ class PerpusImp(private val dataSource: DataSource): PerpusRepository {
     override fun getDataSkripsi(apiKey: String, page: Int): Flowable<SkripsiResponse> =
         dataSource.dataSkripsi(apiKey,page)
 
-//    override fun getDataBuku(apiKey: String, page: Int): Flowable<BukuResponse> =
-//        dataSource.dataBuku(apiKey, page)
+    override fun getDataSearch(
+        apiKey: String,
+        search: String,
+        page: Int
+    ): Flowable<SkripsiResponse> =
+        dataSource.dataSearch(apiKey,search,page)
+
 
     override fun getDataPeminjaman(
         apiKey: String,
@@ -23,9 +28,9 @@ class PerpusImp(private val dataSource: DataSource): PerpusRepository {
 
     override fun getDataLogin(
         apiKey: String,
-        email: String,
+        nim: String,
         password: String
-    ): Flowable<LoginResponse> = dataSource.userLogin(apiKey, email, password)
+    ): Flowable<LoginResponse> = dataSource.userLogin(apiKey, nim, password)
 
     override fun getDataUbahPassword(
         apiKey: String,

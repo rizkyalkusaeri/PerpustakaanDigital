@@ -43,9 +43,9 @@ class LoginActivity : AppCompatActivity(), LoginView.View {
     }
 
     private fun loadDataLogin(){
-        val email = editTextEmail.text.toString().trim()
+        val nim = editTextNim.text.toString().trim()
         val password = editTextPassword.text.toString().trim()
-        presenter.onLoginButtonClick(API_KEY,email,password)
+        presenter.onLoginButtonClick(API_KEY,nim,password)
     }
 
     override fun noInternetConnection(message: String) {

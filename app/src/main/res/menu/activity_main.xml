@@ -6,8 +6,8 @@
     <item
         android:id="@+id/search_skripsi"
         android:icon="@drawable/ic_search_black_24dp"
-        app:showAsAction="always|collapseActionView"
-        app:actionViewClass="android.widget.SearchView"
+        app:showAsAction="ifRoom|collapseActionView"
+        app:actionViewClass="androidx.appcompat.widget.SearchView"
         android:title="@string/search_skripsi"
         tools:ignore="AlwaysShowAction"/>
 

@@ -1,9 +1,9 @@
+@file:Suppress("DEPRECATION")
+
 package com.example.perpustakaandigital.activity
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.Menu
-import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.perpustakaandigital.R
@@ -16,16 +16,25 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 
 
-class MainActivity : AppCompatActivity() {
-
+@Suppress("DEPRECATION")
+class MainActivity : AppCompatActivity(){
     var fragment: Fragment? = SkripsiFragment()
 
     private val onNavigationItemSelectedListener =
         BottomNavigationView.OnNavigationItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.navigation_home -> fragment = SkripsiFragment()
-                R.id.navigation_account -> fragment = AccountFragment()
-                R.id.navigation_buku -> fragment = PeminjamanFragment()
+                R.id.navigation_home -> {
+                    fragment = SkripsiFragment()
+
+                }
+                R.id.navigation_account -> {
+                    fragment = AccountFragment()
+
+                }
+                R.id.navigation_buku -> {
+                    fragment = PeminjamanFragment()
+
+                }
             }
 
             supportFragmentManager.beginTransaction()
@@ -38,8 +47,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
-        supportActionBar?.displayOptions = ActionBar.DISPLAY_SHOW_CUSTOM
-        supportActionBar?.setCustomView(R.layout.custom_toolbar)
 
         val navigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
 
@@ -59,11 +66,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.activity_main,menu)
-        return true
-    }
-
 
     override fun onSaveInstanceState(outState: Bundle) {
         supportFragmentManager.putFragment(outState, ConstantUtils.KEY_FRAGMENT, fragment!!)
@@ -79,5 +81,6 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
     }
+
 
 }

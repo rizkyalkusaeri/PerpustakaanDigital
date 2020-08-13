@@ -24,10 +24,13 @@
 
         <TextView
             android:id="@+id/txt_title_pinjam"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_toEndOf="@id/pdf_file"
+            android:singleLine="true"
+            android:ellipsize="marquee"
+            android:scrollHorizontally="true"
             android:text="@string/judul_skripsi"
             android:textColor="@color/colorAccent"
             android:textSize="18sp"

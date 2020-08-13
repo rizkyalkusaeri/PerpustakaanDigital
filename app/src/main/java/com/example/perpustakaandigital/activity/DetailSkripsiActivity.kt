@@ -13,7 +13,6 @@ import com.downloader.OnDownloadListener
 import com.downloader.PRDownloader
 import com.downloader.PRDownloaderConfig
 import com.example.perpustakaandigital.R
-import com.example.perpustakaandigital.database.AppDatabase
 import com.example.perpustakaandigital.model.Data
 import com.example.perpustakaandigital.model.Login
 import com.example.perpustakaandigital.model.Response
@@ -38,13 +37,18 @@ import com.example.perpustakaandigital.utils.snackbar
 import com.example.perpustakaandigital.view.UserPinjamView
 import kotlinx.android.synthetic.main.activity_detail_home.*
 import retrofit2.HttpException
-import java.io.File
+import java.io.*
+import java.math.BigInteger
 import java.net.SocketTimeoutException
+import java.security.MessageDigest
+import java.security.NoSuchAlgorithmException
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.zip.ZipEntry
+import java.util.zip.ZipInputStream
 
 
-@Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
+@Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS", "NAME_SHADOWING")
 class DetailSkripsiActivity : AppCompatActivity(), UserPinjamView.View {
 
     private lateinit var data : ArrayList<Data>
@@ -52,6 +56,7 @@ class DetailSkripsiActivity : AppCompatActivity(), UserPinjamView.View {
     private var dataSource : DataSource? = null
 
     private lateinit var login : Login
+    private val STORAGE_PERMISSION: Int = 1000
 
     var position: Int = 1
 
@@ -65,7 +70,7 @@ class DetailSkripsiActivity : AppCompatActivity(), UserPinjamView.View {
     var file_pdf: String? = null
     var pass_pdf: String? = null
 
-    @SuppressLint("SimpleDateFormat")
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail_home)
@@ -78,71 +83,73 @@ class DetailSkripsiActivity : AppCompatActivity(), UserPinjamView.View {
             showDetailHome()
         }
 
-        swipe_refresh.isRefreshing = false
+        swipe_refresh.setOnRefreshListener {
+            downloadState()
+        }
 
         btn_open.setOnClickListener {
+            val directoryName = MD5Hash(data[position].id_penulis.toString()+"digitallibraryifunikom")
+
             val intent = Intent(this, PdfActivity::class.java)
             intent.putExtra("filename",file_pdf)
             intent.putExtra("password",pass_pdf)
             intent.putExtra("halaman",halaman)
-            intent.putExtra("dirName",id_penulis)
+            intent.putExtra("dirName",directoryName)
             startActivity(intent)
         }
 
         btn_borrow.setOnClickListener {
-            val idAnggota = login.id_anggota.toString().trim()
-            val idSkripsi = data[position].id.toString().trim()
+            AlertDialog.Builder(this)
+                .setTitle("Peminjaman")
+                .setMessage("Yakin untuk Mendownload File ?")
+                .setPositiveButton("Ya") { _, _ ->
+                    pdfAction()
+                    setDataPinjam()
 
-            val calendar = Calendar.getInstance()
-            val today = calendar.time
+                }.setNegativeButton("tidak"){dialog,_ ->
+                    dialog.cancel()
+                }
+                .show()
 
-            calendar.add(Calendar.DAY_OF_YEAR, 7)
-            val tomorrow = calendar.time
-            val date = SimpleDateFormat("yyyy-MM-dd")
-
-            val tanggalPinjam = date.format(today)
-            val tanggalPengembalian = date.format(tomorrow)
-
-            presenterPinjam.onPinjamButtonClick(API_KEY,idSkripsi,idAnggota,tanggalPinjam,tanggalPengembalian)
         }
 
     }
 
+    fun MD5Hash(s: String): String? {
+        var m: MessageDigest? = null
+        try {
+            m = MessageDigest.getInstance("MD5")
+        } catch (e: NoSuchAlgorithmException) {
+            e.printStackTrace()
+        }
+        m?.update(s.toByteArray(), 0, s.length)
+        return BigInteger(1, m?.digest()).toString(16)
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    private fun setDataPinjam(){
+        val idAnggota = login.id_anggota.toString().trim()
+        val idSkripsi = data[position].id.toString().trim()
+
+        val calendar = Calendar.getInstance()
+        val today = calendar.time
+
+        calendar.add(Calendar.DAY_OF_YEAR, 7)
+        val tomorrow = calendar.time
+        val date = SimpleDateFormat("yyyy-MM-dd")
+
+        val tanggalPinjam = date.format(today)
+        val tanggalPengembalian = date.format(tomorrow)
+
+        presenterPinjam.onPinjamButtonClick(API_KEY,idSkripsi,idAnggota,tanggalPinjam,tanggalPengembalian)
+    }
+
+    /*-------------------PRDOWNLOADER-------------------*/
+    @SuppressLint("SetTextI18n")
     private fun downloadPdf(url: String, dirPath: String, fileName: String){
         PRDownloader.download(url,dirPath,fileName)
             .build()
             .setOnProgressListener {
-                val progressPercent : Long = it.currentBytes * 100 / it.totalBytes
-                progressbar_download.visibility = View.VISIBLE
-                progressbar_download.progress = progressPercent.toInt()
-                txtprogressdownload.visibility = View.VISIBLE
-                btn_borrow.isEnabled = false
-                window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
-
-            }
-            .start(object : OnDownloadListener {
-                override fun onDownloadComplete() {
-                    btn_borrow.isEnabled = false
-                    txtprogressdownload.visibility = View.GONE
-                }
-
-
-                override fun onError(error: Error?) {
-                    Toast.makeText(this@DetailSkripsiActivity, "Error in downloading file : $error",
-                        Toast.LENGTH_LONG)
-                        .show()
-
-                    progressbar_download.progress = 0
-                }
-
-            })
-    }
-
-    private fun downloadThumbnail(url: String, dirPath: String, fileName: String){
-        PRDownloader.download(url,dirPath,fileName)
-            .build()
-            .setOnProgressListener {
-                btn_borrow.isEnabled = false
                 val progressPercent : Long = it.currentBytes * 100 / it.totalBytes
                 progressbar_download.visibility = View.VISIBLE
                 progressbar_download.progress = progressPercent.toInt()
@@ -153,66 +160,117 @@ class DetailSkripsiActivity : AppCompatActivity(), UserPinjamView.View {
             }
             .start(object : OnDownloadListener {
                 override fun onDownloadComplete() {
+                    btn_borrow.isEnabled = false
+                    progressbar_download.visibility = View.GONE
                     txtprogressdownload.visibility = View.GONE
                     window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
                 }
+
 
                 override fun onError(error: Error?) {
                     Toast.makeText(this@DetailSkripsiActivity, "Error in downloading file : $error",
                         Toast.LENGTH_LONG)
                         .show()
+
                     progressbar_download.progress = 0
                 }
 
             })
     }
 
+
     private fun downloadComplete(){
         root_layout_detail.snackbar("Download telah selesai")
-        progressbar_download.visibility = View.GONE
-        txtprogressdownload.visibility = View.GONE
         btn_borrow.visibility = View.GONE
         btn_open.visibility = View.VISIBLE
     }
+
+
 
     private fun thumbnailDownload(){
         val thumbnailExt = ".jpg"
         val thumbnail = "/thumbnail/"
         val totalHalaman = data[position].halaman!!.toInt()
-        val directoryName = data[position].id_penulis.toString()
+        val directoryName = MD5Hash(data[position].id_penulis.toString()+"digitallibraryifunikom")
 
         for(i in 1..totalHalaman){
-            downloadThumbnail(
+            downloadPdf(
                 PDF_URL+ directoryName + thumbnail + i + thumbnailExt,
                 FileUtils.getRootDirPath(this) + File.separator + directoryName,
                 i.toString() + thumbnailExt
             )
         }
+    }
 
-        downloadComplete()
+    private fun unzip(zipFile: File?, targetDirectory: File?) {
+        val zis = ZipInputStream(
+            BufferedInputStream(FileInputStream(zipFile))
+        )
+        zis.use { zis ->
+            var ze: ZipEntry
+            var count: Int
+            val buffer = ByteArray(8192)
+            while (zis.nextEntry.also { ze = it } != null) {
+                val file = File(targetDirectory, ze.name)
+                val dir = if (ze.isDirectory) file else file.parentFile
+                if (!dir.isDirectory && !dir.mkdirs()) throw FileNotFoundException(
+                    "Failed to ensure directory: " +
+                            dir.absolutePath
+                )
+                if (ze.isDirectory) continue
+                val fout = FileOutputStream(file)
+                fout.use { fout ->
+                    while (zis.read(buffer).also { count = it } != -1) fout.write(
+                        buffer,
+                        0,
+                        count
+                    )
+                }
+                /* if time should be restored as well
+                long time = ze.getTime();
+                if (time > 0)
+                    file.setLastModified(time);
+                */
+            }
+        }
+    }
+
+    private fun zipDownload(){
+        val zipExt = ".zip"
+        val directoryName = MD5Hash(data[position].id_penulis.toString()+"digitallibraryifunikom")
+
+        downloadPdf(PDF_URL + directoryName + File.separator + directoryName + zipExt,
+            FileUtils.getRootDirPath(this),
+            directoryName + zipExt)
+
 
     }
 
+    @SuppressLint("SetTextI18n")
     private fun pdfAction(){
+        val directoryName = MD5Hash(data[position].id_penulis.toString()+"digitallibraryifunikom")
+        val rootDirectory = FileUtils.getRootDirPath(this)
+        btn_borrow.text = "Mengunduh"
         val pdf = "/pdf/"
         val fileName = file_pdf
-        val directoryName = data[position].id_penulis.toString()
         val dirThumbnail = File(FileUtils.getRootDirPath(this) + File.separator + directoryName)
+
 
         if (fileName != null) {
             downloadPdf(
                 PDF_URL + directoryName + pdf + file_pdf,
-                FileUtils.getRootDirPath(this),
+                rootDirectory,
                 fileName
             )
+
+            if(!dirThumbnail.exists()){
+                dirThumbnail.mkdirs()
+                thumbnailDownload()
+            } else {
+                thumbnailDownload()
+            }
         }
 
-        if(!dirThumbnail.exists()){
-            dirThumbnail.mkdirs()
-            thumbnailDownload()
-        } else {
-            thumbnailDownload()
-        }
 
     }
 
@@ -225,6 +283,23 @@ class DetailSkripsiActivity : AppCompatActivity(), UserPinjamView.View {
         penulis = data[position].penulis.toString()
         id_penulis = data[position].id_penulis.toString()
         kelompok_keilmuan = data[position].kelompok_keilmuan.toString()
+        when (kelompok_keilmuan) {
+            "A" -> {
+                kelompok_keilmuan = "A - Sistem Informasi"
+            }
+            "B" -> {
+                kelompok_keilmuan = "B - Rekayasa Perangkat Lunak Dan Pengetahuan"
+            }
+            "C" -> {
+                kelompok_keilmuan = "C - Multimedia,Jaringan Komputer,Keamanan Sistem Dan Teknologi"
+            }
+            "D" -> {
+                kelompok_keilmuan = "D - Mobile Dan Web Teknologi"
+            }
+            "E" -> {
+                kelompok_keilmuan = "E - Ilmu Komputer"
+            }
+        }
         file_pdf = data[position].file_pdf.toString()
         pass_pdf = data[position].pass_pdf.toString()
 
@@ -308,7 +383,6 @@ class DetailSkripsiActivity : AppCompatActivity(), UserPinjamView.View {
 
     override fun onDestroy() {
         super.onDestroy()
-        AppDatabase.destroyInstance()
     }
 
     //PEMINJAMAN STATE
@@ -322,8 +396,7 @@ class DetailSkripsiActivity : AppCompatActivity(), UserPinjamView.View {
     }
 
     override fun onSuccessPinjam(pinjam: Response) {
-        Toast.makeText(this, pinjam.message, Toast.LENGTH_LONG).show()
-        pdfAction()
+        downloadComplete()
     }
 
 

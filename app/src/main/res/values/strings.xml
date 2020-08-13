@@ -66,4 +66,9 @@
     <string name="halaman">jumlah halaman</string>
     <string name="tgl_pinjam">Tanggal Pinjam</string>
     <string name="tgl_kembali">Tanggal Kembali</string>
+    <string name="subtitle">ENJOY IN CODE</string>
+    <string name="histori_peminjaman">Histori Peminjaman</string>
+    <string name="half_name">Smart Library</string>
+    <string name="second_name">Teknik Informatika Unikom</string>
+    <string name="login_NIM_hint">NIM or NIP</string>
 </resources>

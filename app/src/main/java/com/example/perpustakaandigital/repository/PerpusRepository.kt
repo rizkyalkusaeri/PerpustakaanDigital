@@ -6,11 +6,11 @@ import io.reactivex.Flowable
 interface PerpusRepository {
     fun getDataSkripsi(apiKey: String, page:Int): Flowable<SkripsiResponse>
 
-//    fun getDataBuku(apiKey: String, page:Int): Flowable<BukuResponse>
+    fun getDataSearch(apiKey: String,search:String, page:Int): Flowable<SkripsiResponse>
 
     fun getDataPeminjaman(apiKey: String,idAnggota: String,stat: String ,page:Int): Flowable<PeminjamanResponse>
 
-    fun getDataLogin(apiKey: String, email: String, password:String): Flowable<LoginResponse>
+    fun getDataLogin(apiKey: String, nim: String, password:String): Flowable<LoginResponse>
 
     fun getDataUbahPassword(apiKey: String, id_anggota: String, password: String): Flowable<Response>
 

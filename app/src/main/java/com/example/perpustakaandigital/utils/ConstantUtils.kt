@@ -12,12 +12,9 @@ class ConstantUtils {
         const val PDF_URL: String = BuildConfig.PDF_URL
         const val API_KEY: String = BuildConfig.API_KEY
         const val MAHASISWA_EXTRA: String = "mahasiswa_data"
-        const val PEMINJAMAN_EXTRA: String = "user_data"
         const val STATE_SAVED: String = "state_saved"
 
-        const val SAVE_ID: String = "save_id"
         const val SAVE_JUDUL: String = "save_judul"
-        const val SAVE_NIM: String = "save_nim"
         const val SAVE_HALAMAN: String = "save_halaman"
         const val SAVE_PENULIS: String = "save_penulis"
         const val SAVE_FILE: String = "save_file"

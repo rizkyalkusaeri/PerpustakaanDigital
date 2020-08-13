@@ -16,13 +16,13 @@ class LoginPresenter(
 
     private val compositeDisposable = CompositeDisposable()
 
-    override fun onLoginButtonClick(apiKey: String, email: String, password: String) {
+    override fun onLoginButtonClick(apiKey: String, nim: String, password: String) {
         view.showProgressBar()
-        if(email.isEmpty() || password.isEmpty()){
-            view.onFailure("Invalid email or password")
+        if(nim.isEmpty() || password.isEmpty()){
+            view.onFailure("Invalid NIM/NIP or password")
             return
         }  else {
-            login?.getDataLogin(apiKey, email, password)
+            login?.getDataLogin(apiKey, nim, password)
                 ?.observeOn(AndroidSchedulers.mainThread())
                 ?.subscribeOn(Schedulers.io())
                 ?.subscribeWith(object : ResourceSubscriber<LoginResponse>() {

@@ -17,7 +17,7 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField 'String', 'API_KEY', '"skripsiunikom"'
+        buildConfigField 'String', 'API_KEY', '"117ce103453be5a33ef9452f061a2538"'
         buildConfigField 'String', 'BASE_URL', '"https://www.digitallibraryifunikom.xyz"'
         buildConfigField 'String', 'PDF_URL', '"https://www.digitallibraryifunikom.xyz/Berkas/"'
 

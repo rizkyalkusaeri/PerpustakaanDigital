@@ -2,7 +2,6 @@ package com.example.perpustakaandigital.network
 
 import android.content.Context
 import com.example.perpustakaandigital.utils.ConstantUtils.Companion.BASE_URL
-import com.readystatesoftware.chuck.ChuckInterceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -19,7 +18,6 @@ class NetworkProvider {
             logging.level = HttpLoggingInterceptor.Level.BODY
 
             val clientTest = OkHttpClient.Builder()
-                    .addInterceptor(ChuckInterceptor(context))
                     .addInterceptor(logging)
                     .build()
 

@@ -35,6 +35,7 @@ import com.example.perpustakaandigital.view.PeminjamanView
 import com.example.perpustakaandigital.view.UserReturnView
 import com.example.perpustakaandigital.viewmodel.PeminjamanViewModel
 import com.example.perpustakaandigital.R
+import com.example.perpustakaandigital.activity.LoginActivity
 import com.example.perpustakaandigital.activity.PdfActivity
 import kotlinx.android.synthetic.main.fragment_peminjaman.*
 import retrofit2.HttpException
@@ -95,6 +96,7 @@ class PeminjamanFragment : Fragment(), PeminjamanView.View, UserReturnView.View,
         showListPeminjaman()
     }
 
+
     private fun prepare(view: View){
         recyclerView = view.findViewById(R.id.rv_pinjam)
         swipeRefresh = view.findViewById(R.id.swipe_refresh_peminjaman)
@@ -118,13 +120,19 @@ class PeminjamanFragment : Fragment(), PeminjamanView.View, UserReturnView.View,
         mLayoutManager = LinearLayoutManager(context)
         recyclerView.layoutManager = mLayoutManager
 
-
-
         recyclerView.adapter = adapter
     }
 
     private val getDataPeminjaman = Observer<ArrayList<Peminjaman>>{ peminjaman ->
         adapter.setDataPeminjaman(peminjaman)
+        if(adapter.itemCount > 0){
+            rv_pinjam.visibility = View.VISIBLE
+            tv_no_data.visibility = View.GONE
+        } else{
+            rv_pinjam.visibility = View.GONE
+            tv_no_data.visibility = View.VISIBLE
+        }
+
     }
 
     private fun showListPeminjaman(){
@@ -134,10 +142,6 @@ class PeminjamanFragment : Fragment(), PeminjamanView.View, UserReturnView.View,
         if (repository != null){
             peminjamanViewModel.setDataPeminjaman(
                 API_KEY, view = this ,stat = stat,page = page ,perpus = repository,idAnggota = idAnggota)
-            tv_no_data.visibility = View.GONE
-        } else {
-            rv_pinjam.visibility = View.GONE
-            tv_no_data.visibility = View.VISIBLE
         }
     }
 
@@ -234,30 +238,48 @@ class PeminjamanFragment : Fragment(), PeminjamanView.View, UserReturnView.View,
         })
     }
 
+    private fun prepareAfterReturn(){
+        peminjamanViewModel.getDataPeminjaman().observe(viewLifecycleOwner, getDataPeminjaman)
+        adapter = PeminjamanAdapter(this.requireActivity(),this)
+        adapter.notifyDataSetChanged()
+        recyclerView.adapter = adapter
+    }
+
     override fun onReturnClickListener(idPeminjaman: Int, fileName: String, directoryName:String) {
 
         val dirPath = activity?.let { FileUtils.getRootDirPath(it) }
         val returnFile = File(dirPath, fileName)
         val dirThumbnail = File(context?.let { FileUtils.getRootDirPath(it) } + File.separator + directoryName)
 
-        if (returnFile.exists()){
-                returnFile.delete()
-                if (dirThumbnail.isDirectory) {
-                    val children: Array<String> = dirThumbnail.list()
-                    for (i in children.indices) {
-                        File(dirThumbnail, children[i]).delete()
+        context?.let {
+            AlertDialog.Builder(it)
+                .setTitle("Return")
+                .setMessage("Yakin untuk mengembalikkan Skripsi ?")
+                .setPositiveButton("Oke") { _, _ ->
+                    presenterReturn.onReturnButtonClick(API_KEY,idPeminjaman)
+
+                    if (returnFile.exists()){
+                        returnFile.delete()
+                        if (dirThumbnail.isDirectory) {
+                            val children: Array<String> = dirThumbnail.list()
+                            for (i in children.indices) {
+                                File(dirThumbnail, children[i]).delete()
+                            }
+                        }
+
+                        Toast.makeText(context, "Skripsi telah dikembalikan", Toast.LENGTH_LONG).show()
+                        prepareAfterReturn()
+                        showListPeminjaman()
+                    } else{
+                        Toast.makeText(context, "Maaf File Skripsi Tidak Ditemukkan", Toast.LENGTH_LONG).show()
                     }
+
+
+                }.setNegativeButton("tidak"){dialog, _ ->
+                    dialog.cancel()
                 }
-
-            presenterReturn.onReturnButtonClick(API_KEY,idPeminjaman)
-
-
-            Toast.makeText(context, "Skripsi telah dikembalikan", Toast.LENGTH_LONG).show()
-        } else{
-            Toast.makeText(context, "Maaf Skripsi Tidak Ditemukkan", Toast.LENGTH_LONG).show()
+                .show()
         }
-
-        showListPeminjaman()
 
     }
 
@@ -269,6 +291,7 @@ class PeminjamanFragment : Fragment(), PeminjamanView.View, UserReturnView.View,
             intent.putExtra("dirName",directoryName)
         startActivity(intent)
     }
+
 
 
 }

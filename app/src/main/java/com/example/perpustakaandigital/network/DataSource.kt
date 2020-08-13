@@ -13,12 +13,14 @@ interface DataSource {
         @Query("page") page: Int
     ) : Flowable<SkripsiResponse>
 
-//    @GET("/api/buku")
-//    fun dataBuku(
-//        @Query("X-API-KEY")
-//        apiKey : String,
-//        @Query("page") page: Int
-//    ) : Flowable<BukuResponse>
+    @GET("/api/searchskripsi")
+    fun dataSearch(
+        @Query("X-API-KEY")
+        apiKey : String,
+        @Query("search")
+        search: String,
+        @Query("page") page: Int
+    ) : Flowable<SkripsiResponse>
 
     @GET("/api/peminjaman")
     fun dataPeminjaman(
@@ -34,7 +36,7 @@ interface DataSource {
     fun userLogin(
         @Field("X-API-KEY")
         apiKey : String,
-        @Field("email") email : String,
+        @Field("nim") nim : String,
         @Field("password") password : String
     ): Flowable<LoginResponse>
 

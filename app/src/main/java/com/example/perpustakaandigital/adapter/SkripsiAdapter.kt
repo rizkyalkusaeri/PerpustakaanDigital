@@ -5,12 +5,17 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Filter
+import android.widget.Filterable
 import androidx.recyclerview.widget.RecyclerView
-import com.example.perpustakaandigital.R
-import com.example.perpustakaandigital.utils.ConstantUtils.Companion.MAHASISWA_EXTRA
 import com.example.perpustakaandigital.activity.DetailSkripsiActivity
 import com.example.perpustakaandigital.model.Data
+import com.example.perpustakaandigital.utils.ConstantUtils.Companion.MAHASISWA_EXTRA
+import com.example.perpustakaandigital.R
 import kotlinx.android.synthetic.main.item_home.view.*
+import java.util.*
+import kotlin.collections.ArrayList
+
 
 class SkripsiAdapter(private val context: Context) : RecyclerView.Adapter<SkripsiAdapter.SkripsiViewHolder>() {
 
@@ -22,10 +27,6 @@ class SkripsiAdapter(private val context: Context) : RecyclerView.Adapter<Skrips
         notifyDataSetChanged()
     }
 
-    fun refreshAdapter(data : List<Data>){
-        this.data.addAll(data)
-        notifyItemRangeChanged(0,this.data.size)
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int):SkripsiViewHolder{
         return SkripsiViewHolder(
@@ -48,13 +49,35 @@ class SkripsiAdapter(private val context: Context) : RecyclerView.Adapter<Skrips
         fun bind(data: Data){
             with(itemView){
 
+                var kk : String? = null
+
                 txt_title.text = data.judul_skripsi
+                txt_title.isSelected = true
 
                 txt_nim.text = data.nim_penulis
 
                 txt_penulis.text = data.penulis
 
-                txt_kk.text = data.kelompok_keilmuan
+                when (data.kelompok_keilmuan) {
+                    "A" -> {
+                        kk = "A - Sistem Informasi"
+                    }
+                    "B" -> {
+                        kk = "B - Rekayasa Perangkat Lunak Dan Pengetahuan"
+                    }
+                    "C" -> {
+                        kk = "C - Multimedia,Jaringan Komputer,Keamanan Sistem Dan Teknologi"
+                    }
+                    "D" -> {
+                        kk = "D - Mobile Dan Web Teknologi"
+                    }
+                    "E" -> {
+                        kk = "E - Ilmu Komputer"
+                    }
+                }
+
+                txt_kk.text = kk
+                txt_kk.isSelected = true
 
             }
         }
@@ -69,6 +92,7 @@ class SkripsiAdapter(private val context: Context) : RecyclerView.Adapter<Skrips
             itemView.setOnClickListener(this)
         }
     }
+
 }
 
 
